@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Makes the page work on phones -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WagaShelf</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>WagaShelf</h1>
+
+    <!-- The form: like the Entry widgets in your Password Manager -->
+    <section id="add-entry">
+        <input type="text" id="title" placeholder="Title (e.g. Solo Leveling)">
+
+        <select id="type">
+            <option value="Anime">Anime</option>
+            <option value="Manga">Manga</option>
+            <option value="Manhwa">Manhwa</option>
+            <option value="Comic">Comic</option>
+            <option value="Novel">Novel</option>
+        </select>
+
+        <select id="status">
+            <option value="Plan_to_Read">Plan to Read</option>
+            <option value="Reading">Reading</option>
+            <option value="Completed">Completed</option>
+            <option value="On-hold">On-hold</option>
+            <option value="Re-reading">Re-reading</option>
+        </select>
+
+        <input type="number" id="rating" min="1" max="10" placeholder="Rating (1-10)">
+
+        <button id="add-btn">Add</button>
+    </section>
+
+    <!-- Entries will be added here by JavaScript -->
+    <ul id="list"></ul>
+
+    <!-- Loaded last so the HTML above exists before the JS runs -->
+    <script src="app.js"></script>
+</body>
+</html>
