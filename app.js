@@ -33,6 +33,7 @@ function getStatusLabel(status, type) {
     if(status === "completed") return completedOption.textContent;
     if(status === "dropped") return droppedOption.textContent;
     if(status === "on-hold") return onHoldOption.textContent;
+    return status;
 
 
 };
