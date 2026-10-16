@@ -1,12 +1,16 @@
 const addBtn = document.getElementById("add-btn");
 const list = document.getElementById("list");
 
-//Changes the dropdown depending on Media type
+
 const typeSelect = document.getElementById("type");
 const statusSelect = document.getElementById("status");
 const currentOption = document.querySelector('#status option[value="current"]');
 const planningOption = document.querySelector('#status option[value="planning"]');
 const revisitingOption = document.querySelector('#status option[value="revisiting"]');
+const completedOption = document.querySelector('#status option[value="completed"]');
+const droppedOption = document.querySelector('#status option[value="dropped"]');
+const onHoldOption = document.querySelector('#status option[value="on-hold"]');
+//Changes the dropdown depending on Media type
 typeSelect.addEventListener("change",function(){
     const isAnime = typeSelect.value === "Anime";
     if(isAnime){
@@ -26,7 +30,11 @@ function getStatusLabel(status, type) {
     if(status === "current") return isAnime ? "Watching" : "Reading";
     if(status === "planning") return isAnime ? "Plan to Watch" : "Plan to Read";
     if(status === "revisiting") return isAnime ? "Re-Watching" : "Re-Reading";
-    return status;
+    if(status === "completed") return completedOption.textContent;
+    if(status === "dropped") return droppedOption.textContent;
+    if(status === "on-hold") return onHoldOption.textContent;
+
+
 };
 
 
