@@ -1,7 +1,61 @@
-const addbtn = document.getElementById("add-btn");
+const addBtn = document.getElementById("add-btn");
 const list = document.getElementById("list");
 
-addbtn.addEventListener("click",function(){
+//Changes the dropdown depending on Media type
+const typeSelect = document.getElementById("type");
+const statusSelect = document.getElementById("status");
+const currentOption = document.querySelector('#status option[value="current"]');
+const planningOption = document.querySelector('#status option[value="planning"]');
+const revisitingOption = document.querySelector('#status option[value="revisiting"]');
+typeSelect.addEventListener("change",function(){
+    const isAnime = typeSelect.value === "Anime";
+    if(isAnime){
+        currentOption.textContent = "Watching";
+        planningOption.textContent = "Plan to Watch";
+        revisitingOption.textContent = "Re-Watching";
+    }
+    else{
+        currentOption.textContent = "Reading";
+        planningOption.textContent = "Plan to Read";
+        revisitingOption.textContent = "Re-Reading";
+    }
+});
+
+function getStatusLabel(status, type) {
+    const isAnime = type === "Anime";
+    if(status === "current") return isAnime ? "Watching" : "Reading";
+    if(status === "planning") return isAnime ? "Plan to Watch" : "Plan to Read";
+    if(status === "revisiting") return isAnime ? "Re-Watching" : "Re-Reading";
+    return status;
+};
+
+
+
+//LOAD: get saved entries, or start with an empty array
+let FollowingList = JSON.parse(localStorage.getItem("FollowingList")) || [];
+
+//SAVE: write the entries array to localStorage
+function saveEntries() {
+    localStorage.setItem("FollowingList",JSON.stringify(FollowingList));
+};
+
+//DISPLAY:clear the list and rebuild it from the array
+function renderEntries() {
+    list.innerHTML = "";   // empties the <ul> so entries don't show up twice
+
+
+    for(const entry of FollowingList){
+        const li = document.createElement("li");
+        li.textContent = `${entry.title} - ${entry.type} - ${getStatusLabel(entry.status,entry.type)}`;
+        if(entry.rating !== ""){
+            li.textContent += ` - ${entry.rating}/10`;
+        }
+        list.appendChild(li);
+
+    }
+};
+
+addBtn.addEventListener("click", function () {
     const titleInput = document.getElementById("title");
     const typeInput = document.getElementById("type");
     const statusInput = document.getElementById("status");
@@ -18,14 +72,16 @@ addbtn.addEventListener("click",function(){
         window.alert("Title not found");
         return;
     }
-    const li = document.createElement("li")
-    li.textContent = `${title} - ${type} - ${status}`;
-    if (rating !== "") {
-        li.textContent += ` - ${rating}/10`;
-    }
-    list.appendChild(li);
+    const newEntry = {title: title,type: type,status: status,rating: rating};
+    FollowingList.push(newEntry);
+    saveEntries();
+    renderEntries();
     titleInput.value = "";
     ratingInput.value = "";
 
 
 });
+
+// When the page first loads, show any saved entries
+renderEntries();
+
