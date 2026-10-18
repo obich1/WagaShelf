@@ -75,7 +75,7 @@ addBtn.addEventListener("click", function () {
 
 
     if(title.length === 0){
-        window.alert("Title not found");
+        window.alert("Title not inputted");
         return;
     }
     const newEntry = {title: title,type: type,status: status,rating: rating};
@@ -90,4 +90,65 @@ addBtn.addEventListener("click", function () {
 
 // When the page first loads, show any saved entries
 renderEntries();
+
+const searchInput = document.getElementById("search-input");
+const searchBtn = document.getElementById("search-btn");
+const searchResults = document.getElementById("search-results");
+
+// async because we await the search inside
+searchBtn.addEventListener("click", async function () {
+    const searchText = searchInput.value.trim();
+
+    if(searchText === "") return;
+
+    searchResults.textContent = "Searching...";
+
+    let results;
+    try {
+        results = await searchAniList(searchText);
+    } catch (error) {
+        searchResults.textContent = "Couldn't connect to provider";
+        console.log(error)
+        return;
+    }
+
+    searchResults.innerHTML = "";   // clear "Searching..."
+
+    if(results.length === 0){
+        searchResults.textContent = "No results found";
+        return ;
+    }
+
+    for (const media of results) {
+        const title = media.title.english || media.title.romaji;
+        const type = getMediaType(media);
+
+        const card = document.createElement("div");
+        const img = document.createElement("img");
+        img.src = media.coverImage.medium;
+        img.alt = title;
+        const text = document.createElement("p");
+        const averageScore = media.averageScore || "TBD";
+        text.textContent = `${title} - ${type} - ${averageScore}`;
+        const addToShelf = document.createElement("button");
+        addToShelf.textContent = "+ Add to Shelf";
+
+        addToShelf.addEventListener("click",function(){
+            if (FollowingList.some(entry => entry.anilistId === media.id)) {
+                alert("Already on your shelf!");
+                return;
+            }
+            const newEntry = {anilistId: media.id, cover: media.coverImage.medium, title: title,type: type, status: "planning", rating: ""};
+            FollowingList.push(newEntry);
+            saveEntries();
+            renderEntries();
+
+        });
+
+        card.appendChild(img);
+        card.appendChild(text);
+        card.appendChild(addToShelf);
+        searchResults.appendChild(card);
+    }
+});
 
