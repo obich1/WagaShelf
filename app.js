@@ -1,7 +1,6 @@
 const addBtn = document.getElementById("add-btn");
 const list = document.getElementById("list");
 
-
 const typeSelect = document.getElementById("type");
 const statusSelect = document.getElementById("status");
 const currentOption = document.querySelector('#status option[value="current"]');
@@ -37,8 +36,6 @@ function getStatusLabel(status, type) {
 
 
 };
-
-
 
 //LOAD: get saved entries, or start with an empty array
 let FollowingList = JSON.parse(localStorage.getItem("FollowingList")) || [];
