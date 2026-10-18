@@ -36,11 +36,17 @@ async function searchAniList(searchText) {
         body: JSON.stringify(requestBody)
     };
 
-    // 5. SEND it, and wait for the reply
     const response = await fetch(url, options);
 
-    // 6. READ the reply: turn the JSON text into an object
+    if (!response.ok) {
+        throw new Error(`AniList returned status ${response.status}`);
+    }
+
     const data = await response.json();
+
+    if (data.errors) {
+        throw new Error(data.errors[0].message);
+    }
 
     // 7. Return just the array of results, not the whole wrapper
     const results = data.data.Page.media;
