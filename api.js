@@ -1,10 +1,10 @@
 // Searches AniList and returns an array of matching titles
 async function searchAniList(searchText) {
 
-    // 1. WHERE to send the request
+
     const url = "https://graphql.anilist.co";
 
-    // 2. WHAT data we want back (written in GraphQL, AniList's language)
+
     const query = `
         query ($search: String) {
             Page(perPage: 5) {
@@ -23,13 +23,11 @@ async function searchAniList(searchText) {
         }
     `;
 
-    // 3. The BODY: the query, plus the value to fill into $search
     const requestBody = {
         query: query,
         variables: { search: searchText }
     };
 
-    // 4. The full request: method + headers + body
     const options = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -48,7 +46,6 @@ async function searchAniList(searchText) {
         throw new Error(data.errors[0].message);
     }
 
-    // 7. Return just the array of results, not the whole wrapper
     const results = data.data.Page.media;
     return results;
 
