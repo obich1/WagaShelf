@@ -69,8 +69,20 @@ function renderEntries() {
         if(entry.rating !== ""){
             listItem.textContent += ` - ${entry.rating}/10`;
         }
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete item";
+        deleteBtn.addEventListener("click",function(){
+
+            if(confirm("Do you want to remove from shelf")){
+                FollowingList = FollowingList.filter(e => e.id !== entry.id);
+                saveEntries();
+                renderEntries();
+            }
+
+        });
 
         li.appendChild(listItem);
+        li.appendChild(deleteBtn);
 
         list.appendChild(li);
 
@@ -108,7 +120,7 @@ addBtn.addEventListener("click", function () {
     if (titleMatch && !confirm("A title with this name is already on your shelf. Add it anyway?")) {
         return;
     }
-    const newEntry = {title: title,type: type,status: status,rating: rating, anilistId: selectedMedia ? selectedMedia.id : null, cover: selectedMedia ? selectedMedia.coverImage.medium : null,};
+    const newEntry = {id: crypto.randomUUID(),title: title,type: type,status: status,rating: rating, anilistId: selectedMedia ? selectedMedia.id : null, cover: selectedMedia ? selectedMedia.coverImage.medium : null,};
     FollowingList.push(newEntry);
     saveEntries();
     renderEntries();
