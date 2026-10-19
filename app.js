@@ -11,7 +11,7 @@ const completedOption = document.querySelector('#status option[value="completed"
 const droppedOption = document.querySelector('#status option[value="dropped"]');
 const onHoldOption = document.querySelector('#status option[value="on-hold"]');
 //Changes the dropdown depending on Media type
-typeSelect.addEventListener("change",updateStatusLabel());
+typeSelect.addEventListener("change",updateStatusLabel);
 
 function updateStatusLabel(){
     const isAnime = typeSelect.value === "Anime";
