@@ -67,9 +67,6 @@ function renderEntries() {
 
         const listItem = document.createElement("span");
         listItem.textContent = `${entry.title} - ${entry.type}`;
-        if(entry.rating !== ""){
-            listItem.textContent += ` - ${entry.rating}/10`;
-        }
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Delete item";
         deleteBtn.addEventListener("click",function(){
@@ -102,19 +99,19 @@ function renderEntries() {
         input.value = entry.rating;
         input.addEventListener("change",function(){
             if(input.value === ""){
-                entry.rating = input.value
+                entry.rating = input.value;
                 saveEntries();
                 return;
             }
             if(!(Number(input.value) >= 1 && Number(input.value) <= 10)){
                 alert("Rating is from 1-10");
-                entry.rating = input.value;
+                input.value = entry.rating;
                 return;
             }
-            else{
-                entry.rating = input.value;
-                saveEntries();
-            }
+
+            entry.rating = input.value;
+            saveEntries();
+
 
         });
 
@@ -127,7 +124,7 @@ function renderEntries() {
         list.appendChild(li);
 
 
-    };
+    }
 
 };
 
