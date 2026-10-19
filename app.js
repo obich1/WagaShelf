@@ -1,3 +1,4 @@
+let selectedMedia = null;
 const addBtn = document.getElementById("add-btn");
 const list = document.getElementById("list");
 
@@ -10,7 +11,9 @@ const completedOption = document.querySelector('#status option[value="completed"
 const droppedOption = document.querySelector('#status option[value="dropped"]');
 const onHoldOption = document.querySelector('#status option[value="on-hold"]');
 //Changes the dropdown depending on Media type
-typeSelect.addEventListener("change",function(){
+typeSelect.addEventListener("change",updateStatusLabel());
+
+function updateStatusLabel(){
     const isAnime = typeSelect.value === "Anime";
     if(isAnime){
         currentOption.textContent = "Watching";
@@ -22,7 +25,8 @@ typeSelect.addEventListener("change",function(){
         planningOption.textContent = "Plan to Read";
         revisitingOption.textContent = "Re-Reading";
     }
-});
+
+};
 
 function getStatusLabel(status, type) {
     const isAnime = type === "Anime";
@@ -52,13 +56,27 @@ function renderEntries() {
 
     for(const entry of FollowingList){
         const li = document.createElement("li");
-        li.textContent = `${entry.title} - ${entry.type} - ${getStatusLabel(entry.status,entry.type)}`;
-        if(entry.rating !== ""){
-            li.textContent += ` - ${entry.rating}/10`;
+        if(entry.cover){
+            const img = document.createElement("img");
+            img.src = entry.cover;
+            img.alt = entry.title;
+            li.appendChild(img);
         }
+
+
+        const listItem = document.createElement("span");
+        listItem.textContent = `${entry.title} - ${entry.type} - ${getStatusLabel(entry.status,entry.type)}`;
+        if(entry.rating !== ""){
+            listItem.textContent += ` - ${entry.rating}/10`;
+        }
+
+        li.appendChild(listItem);
+
         list.appendChild(li);
 
-    }
+
+    };
+
 };
 
 addBtn.addEventListener("click", function () {
@@ -78,12 +96,25 @@ addBtn.addEventListener("click", function () {
         window.alert("Title not inputted");
         return;
     }
-    const newEntry = {title: title,type: type,status: status,rating: rating};
+
+     if (selectedMedia && FollowingList.some(entry => entry.anilistId === selectedMedia.id)) {
+        alert("Already on your shelf!");
+        return;
+    }
+
+    const titleMatch = FollowingList.some(
+    entry => entry.title.toLowerCase() === title.toLowerCase()
+    );
+    if (titleMatch && !confirm("A title with this name is already on your shelf. Add it anyway?")) {
+        return;
+    }
+    const newEntry = {title: title,type: type,status: status,rating: rating, anilistId: selectedMedia ? selectedMedia.id : null, cover: selectedMedia ? selectedMedia.coverImage.medium : null,};
     FollowingList.push(newEntry);
     saveEntries();
     renderEntries();
     titleInput.value = "";
     ratingInput.value = "";
+    selectedMedia = null;
 
 
 });
@@ -108,7 +139,7 @@ searchBtn.addEventListener("click", async function () {
         results = await searchAniList(searchText);
     } catch (error) {
         searchResults.textContent = "Couldn't connect to provider";
-        console.log(error)
+        console.error(error)
         return;
     }
 
@@ -116,7 +147,7 @@ searchBtn.addEventListener("click", async function () {
 
     if(results.length === 0){
         searchResults.textContent = "No results found";
-        return ;
+        return;
     }
 
     for (const media of results) {
@@ -130,24 +161,21 @@ searchBtn.addEventListener("click", async function () {
         const text = document.createElement("p");
         const averageScore = media.averageScore || "TBD";
         text.textContent = `${title} - ${type} - ${averageScore}`;
-        const addToShelf = document.createElement("button");
-        addToShelf.textContent = "+ Add to Shelf";
+        const selectMedia = document.createElement("button");
+        selectMedia.textContent = "Select";
 
-        addToShelf.addEventListener("click",function(){
-            if (FollowingList.some(entry => entry.anilistId === media.id)) {
-                alert("Already on your shelf!");
-                return;
-            }
-            const newEntry = {anilistId: media.id, cover: media.coverImage.medium, title: title,type: type, status: "planning", rating: ""};
-            FollowingList.push(newEntry);
-            saveEntries();
-            renderEntries();
+        selectMedia.addEventListener("click",function(){
+            selectedMedia = media;
+            document.getElementById("title").value = title;
+            document.getElementById("type").value = type;
+            updateStatusLabel();
+
 
         });
 
         card.appendChild(img);
         card.appendChild(text);
-        card.appendChild(addToShelf);
+        card.appendChild(selectMedia);
         searchResults.appendChild(card);
     }
 });
