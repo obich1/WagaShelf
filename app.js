@@ -1,3 +1,4 @@
+let statusList = ["planning","current","completed","on-hold","dropped","revisiting"];
 let selectedMedia = null;
 const addBtn = document.getElementById("add-btn");
 const list = document.getElementById("list");
@@ -65,7 +66,7 @@ function renderEntries() {
 
 
         const listItem = document.createElement("span");
-        listItem.textContent = `${entry.title} - ${entry.type} - ${getStatusLabel(entry.status,entry.type)}`;
+        listItem.textContent = `${entry.title} - ${entry.type}`;
         if(entry.rating !== ""){
             listItem.textContent += ` - ${entry.rating}/10`;
         }
@@ -80,8 +81,47 @@ function renderEntries() {
             }
 
         });
+        const select = document.createElement("select");
+
+
+        for(const value of statusList){
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = getStatusLabel(value,entry.type);
+            select.appendChild(option);
+        }
+        select.value = entry.status;
+        select.addEventListener("change",function(){
+            entry.status = select.value
+            saveEntries();
+        });
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = 1;
+        input.max = 10
+        input.value = entry.rating;
+        input.addEventListener("change",function(){
+            if(input.value === ""){
+                entry.rating = input.value
+                saveEntries();
+                return;
+            }
+            if(!(Number(input.value) >= 1 && Number(input.value) <= 10)){
+                alert("Rating is from 1-10");
+                entry.rating = input.value;
+                return;
+            }
+            else{
+                entry.rating = input.value;
+                saveEntries();
+            }
+
+        });
+
 
         li.appendChild(listItem);
+        li.appendChild(select);
+        li.appendChild(input);
         li.appendChild(deleteBtn);
 
         list.appendChild(li);
