@@ -14,6 +14,13 @@ const onHoldOption = document.querySelector('#status option[value="on-hold"]');
 //Changes the dropdown depending on Media type
 typeSelect.addEventListener("change",updateStatusLabel);
 
+function clearResults(){
+    if(searchInput.value === ""){
+        searchResults.textContent = "";
+    }
+
+};
+
 function updateStatusLabel(){
     const isAnime = typeSelect.value === "Anime";
     if(isAnime){
@@ -175,15 +182,16 @@ const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
 const searchResults = document.getElementById("search-results");
 
-searchInput.addEventListener("input",function(){
-    if(searchInput.value === ""){
-        searchResults.textContent = "";
+searchInput.addEventListener("input",clearResults);
+searchInput.addEventListener("keydown",function(event){
+    if(event.key === "Enter"){
+        runSearch();
     }
 
 });
 
 // async because we await the search inside
-searchBtn.addEventListener("click", async function () {
+async function runSearch(){
     const searchText = searchInput.value.trim();
 
     if(searchText === "") return;
@@ -234,5 +242,8 @@ searchBtn.addEventListener("click", async function () {
         card.appendChild(selectMedia);
         searchResults.appendChild(card);
     }
-});
+};
+
+
+searchBtn.addEventListener("click", runSearch);
 
