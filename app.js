@@ -175,6 +175,13 @@ const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
 const searchResults = document.getElementById("search-results");
 
+searchInput.addEventListener("input",function(){
+    if(searchInput.value === ""){
+        searchResults.textContent = "";
+    }
+
+});
+
 // async because we await the search inside
 searchBtn.addEventListener("click", async function () {
     const searchText = searchInput.value.trim();
