@@ -99,7 +99,13 @@ function renderEntries() {
         input.type = "number";
         input.min = 1;
         input.max = 10
-        input.placeholder = "Rating (1-10)"; input.value = entry.rating; input.addEventListener("change",function(){ if(input.value === ""){ entry.rating = input.value; saveEntries(); return;
+        input.placeholder = "Rating (1-10)";
+        input.value = entry.rating;
+        input.addEventListener("change",function(){
+            if(input.value === ""){
+                entry.rating = input.value;
+                saveEntries();
+                return;
             }
             if(!(Number(input.value) >= 1 && Number(input.value) <= 10)){
                 alert("Rating is from 1-10");
@@ -109,7 +115,6 @@ function renderEntries() {
 
             entry.rating = input.value;
             saveEntries();
-
 
         });
 
@@ -214,8 +219,8 @@ async function runSearch(){
         img.src = media.coverImage.medium;
         img.alt = title;
         const text = document.createElement("p");
-        const averageScore = media.averageScore || "TBD";
-        text.textContent = `${title} - ${type} - ${averageScore}`;
+        const progress = getProgressNo(media);
+        text.textContent = `${title} - ${type} - ${progress}`;
         const selectMedia = document.createElement("button");
         selectMedia.textContent = "Select";
 
