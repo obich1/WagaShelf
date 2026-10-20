@@ -70,8 +70,6 @@ function renderEntries() {
             img.alt = entry.title;
             li.appendChild(img);
         }
-
-
         const listItem = document.createElement("span");
         listItem.textContent = `${entry.title} - ${entry.type}`;
         const deleteBtn = document.createElement("button");
@@ -86,8 +84,6 @@ function renderEntries() {
 
         });
         const select = document.createElement("select");
-
-
         for(const value of statusList){
             const option = document.createElement("option");
             option.value = value;
@@ -103,12 +99,7 @@ function renderEntries() {
         input.type = "number";
         input.min = 1;
         input.max = 10
-        input.value = entry.rating;
-        input.addEventListener("change",function(){
-            if(input.value === ""){
-                entry.rating = input.value;
-                saveEntries();
-                return;
+        input.placeholder = "Rating (1-10)"; input.value = entry.rating; input.addEventListener("change",function(){ if(input.value === ""){ entry.rating = input.value; saveEntries(); return;
             }
             if(!(Number(input.value) >= 1 && Number(input.value) <= 10)){
                 alert("Rating is from 1-10");
