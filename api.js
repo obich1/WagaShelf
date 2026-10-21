@@ -60,10 +60,10 @@ function getMediaType(media){
     return "Manga";
 };
 
-function getProgressNo(media){
+function getProgressLabel(media){
     const isOneEpisode = media.episodes === 1;
     const isOneChapter = media.chapters === 1;
     if(getMediaType(media) === "Anime" && media.episodes !== null) return isOneEpisode ? `${media.episodes} Episode` : `${media.episodes} Episodes`;
-    if(getMediaType(media) !== "Anime" && media.chapters != null) return isOneChapter ? `${media.chapters} Chapter` : `${media.chapters} Chapters`;
+    if(getMediaType(media) !== "Anime" && media.chapters !== null) return isOneChapter ? `${media.chapters} Chapter` : `${media.chapters} Chapters`;
     return "TBD";
 };
