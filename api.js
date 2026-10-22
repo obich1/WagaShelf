@@ -7,7 +7,7 @@ async function searchAniList(searchText) {
 
     const query = `
         query ($search: String) {
-            Page(perPage: 5) {
+            Page(perPage: 6) {
                 media(search: $search) {
                     id
                     title { romaji english }

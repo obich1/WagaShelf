@@ -219,13 +219,20 @@ async function runSearch(){
         img.src = media.coverImage.medium;
         img.alt = title;
         const text = document.createElement("p");
-        const progress = getProgressNo(media);
+        const progress = getProgressLabel(media);
         text.textContent = `${title} - ${type} - ${progress}`;
-        const selectMedia = document.createElement("button");
-        selectMedia.textContent = "Select";
+        const coverButton = document.createElement("button");
+        coverButton.appendChild(img);
+        coverButton.title = `Select ${title}`;
+        coverButton.className = "cover-btn";
 
-        selectMedia.addEventListener("click",function(){
+        coverButton.addEventListener("click",function(){
             selectedMedia = media;
+            const selectedCover = searchResults.querySelector(".cover-btn.selected");
+            if(selectedCover){
+                selectedCover.classList.remove("selected");
+            }
+            coverButton.classList.add("selected");
             document.getElementById("title").value = title;
             document.getElementById("type").value = type;
             updateStatusLabel();
@@ -233,13 +240,14 @@ async function runSearch(){
 
         });
 
-        card.appendChild(img);
+        card.appendChild(coverButton)
         card.appendChild(text);
-        card.appendChild(selectMedia);
         searchResults.appendChild(card);
     }
 };
 
-
 searchBtn.addEventListener("click", runSearch);
+
+
+
 
