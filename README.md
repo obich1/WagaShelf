@@ -9,7 +9,7 @@
 ## Features
 
 - **Search real titles** from the AniList database, with cover art, media type and episode or chapter counts
-- **Select a result to fill in the form**, then choose your status and rating before adding it
+- **Click a title cover to fill in the form**, then choose your status and rating before adding it
 - **Add titles manually** when they aren't on AniList
 - **Edit entries in place**: change status from a dropdown and update ratings (1–10) directly on your shelf
 - **Delete entries**, with a confirmation step
