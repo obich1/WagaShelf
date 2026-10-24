@@ -2,7 +2,7 @@
 
 *Waga* (我が) means "my" in Japanese: **WagaShelf** is your personal shelf for anime, manga, manhwa, manhua and novels, all tracked in one place.
 
- ![Live demo](obich1.github.io/WagaShelf)
+ **🌐 [Live Demo]()**
  ![WagaShelf screenshot](wagashelf-demo.png)
  
 
