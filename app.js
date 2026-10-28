@@ -235,6 +235,20 @@ async function runSearch(){
             coverButton.classList.add("selected");
             document.getElementById("title").value = title;
             document.getElementById("type").value = type;
+            const statusInput = document.getElementById("status");
+            const typeInput = document.getElementById("type");
+
+            typeInput.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+                inline: "nearest"
+            });
+            statusInput.focus({
+                preventScroll: true
+            });
+
+
+
             updateStatusLabel();
 
 
