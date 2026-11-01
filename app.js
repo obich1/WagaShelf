@@ -145,7 +145,7 @@ addBtn.addEventListener("click", function () {
 
 
     if(title.length === 0){
-        window.alert("Title not inputted");
+        alert("Title not inputted");
         return;
     }
 
@@ -167,6 +167,7 @@ addBtn.addEventListener("click", function () {
     titleInput.value = "";
     ratingInput.value = "";
     selectedMedia = null;
+    alert("Added to Shelf");
 
 
 });
