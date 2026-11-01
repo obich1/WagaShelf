@@ -2,6 +2,7 @@ import sqlite3
 
 DATABASE_FILE = "wagashelf.db"
 
+
 def get_connection():
     connection = sqlite3.connect(DATABASE_FILE)
     connection.row_factory = sqlite3.Row
@@ -17,11 +18,12 @@ def create_table():
                 anilist_id INTEGER,
                 title TEXT NOT NULL,
                 type TEXT NOT NULL,
-                Chapters_or_Episodes INTEGER,
+                chapters INTEGER,
+                episodes INTEGER,
                 status TEXT NOT NULL,
                 rating REAL,
                 cover TEXT 
-                    
+
             )
     """)
 
