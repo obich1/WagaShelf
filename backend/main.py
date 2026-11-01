@@ -10,6 +10,7 @@ def get_entries():
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM entries")
     entries = cursor.fetchall()
+    connection.close()
     return [dict(entry) for entry in entries]
 
 
