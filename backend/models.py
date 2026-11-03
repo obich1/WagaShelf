@@ -12,7 +12,7 @@ class EntryCreate(BaseModel):
     title: Title
     type: MediaType
     status: Status
-    rating: Rating | None
+    rating: Rating | None = None
     chapters: int | None = None
     episodes: int | None = None
     cover: str | None = None
