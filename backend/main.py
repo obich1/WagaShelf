@@ -1,6 +1,6 @@
 from fastapi import FastAPI,HTTPException
 from database import get_connection,create_table
-from models import EntryCreate
+from models import EntryCreate,EntryUpdate
 
 app = FastAPI()
 create_table()
@@ -38,6 +38,24 @@ def delete_entry(entry_id: int):
         raise HTTPException(status_code=404, detail="Entry not found")
 
     return {"deleted": entry_id}
+
+@app.patch("/entries/{entry_id}")
+def update_entry(entry_id: int,new_entry:EntryUpdate ):
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM entries WHERE id = ?",(entry_id,))
+    entry = cursor.fetchone()
+    if entry is None:
+        connection.close()
+        raise HTTPException(status_code=404, detail="Entry not found")
+    dict_entry = dict(entry)
+    new_update = new_entry.model_dump(exclude_unset=True)
+    dict_entry.update(new_update)
+    cursor.execute("UPDATE entries SET anilist_id = :anilist_id ,title = :title,type = :type"
+                   ",status = :status,chapters = :chapters,episodes = :episodes,rating = :rating,cover = :cover WHERE id = :id",dict_entry)
+    connection.commit()
+    connection.close()
+    return {"Updated": dict_entry}
 
 
 
