@@ -55,7 +55,7 @@ def update_entry(entry_id: int,new_entry:EntryUpdate ):
                    ",status = :status,chapters = :chapters,episodes = :episodes,rating = :rating,cover = :cover WHERE id = :id",dict_entry)
     connection.commit()
     connection.close()
-    return {"Updated": dict_entry}
+    return dict_entry
 
 
 
