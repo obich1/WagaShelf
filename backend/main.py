@@ -1,4 +1,6 @@
 from fastapi import FastAPI,HTTPException
+from opentelemetry.semconv.attributes.http_attributes import HTTP_RESPONSE_STATUS_CODE
+
 from database import get_connection,create_table
 from models import EntryCreate,EntryUpdate
 
@@ -14,7 +16,7 @@ def get_entries():
     connection.close()
     return [dict(entry) for entry in entries]
 
-@app.post("/entries")
+@app.post("/entries",status_code=201)
 def add_entry(entry: EntryCreate):
     connection = get_connection()
     cursor = connection.cursor()
