@@ -1,6 +1,4 @@
 from fastapi import FastAPI,HTTPException
-from opentelemetry.semconv.attributes.http_attributes import HTTP_RESPONSE_STATUS_CODE
-
 from database import get_connection,create_table
 from models import EntryCreate,EntryUpdate
 
