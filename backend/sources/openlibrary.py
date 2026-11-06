@@ -86,6 +86,11 @@ def search(query: str) -> list[CatalogueItem]:
     return [to_catalogue_item(doc) for doc in data.get("docs", [])]
 
 
+def trending() -> list[CatalogueItem]:
+    data = _get("/trending/weekly.json", {"limit": 12})
+    return [to_catalogue_item(work) for work in data.get("works", [])]
+
+
 def get_title(source_id: str) -> CatalogueItem:
     if not WORK_ID_PATTERN.match(source_id):
         raise TitleNotFound("Open Library work ids look like OL893414W")

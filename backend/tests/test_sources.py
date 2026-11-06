@@ -23,6 +23,7 @@ ANILIST_MEDIA = {
     "siteUrl": "https://anilist.co/manga/105398",
     "externalLinks": [
         {"site": "KakaoPage", "url": "https://page.kakao.com/content/50866481", "type": "STREAMING"},
+        {"site": "KakaoPage", "url": "https://page.kakao.com/other-region", "type": "STREAMING"},
         {"site": "Official Site", "url": "https://example.com", "type": "INFO"},
         {"site": "Twitter", "url": "https://twitter.com/example", "type": "SOCIAL"},
     ],

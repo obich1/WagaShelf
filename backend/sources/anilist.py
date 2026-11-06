@@ -36,6 +36,17 @@ query ($search: String, $type: MediaType, $country: CountryCode,
 }}
 """
 
+TRENDING_QUERY = f"""
+query ($type: MediaType, $country: CountryCode, $format: MediaFormat, $formatNot: MediaFormat) {{
+  Page(perPage: 12) {{
+    media(sort: TRENDING_DESC, type: $type, countryOfOrigin: $country,
+          format: $format, format_not: $formatNot, isAdult: false) {{
+      {MEDIA_FIELDS}
+    }}
+  }}
+}}
+"""
+
 TITLE_QUERY = f"""
 query ($id: Int) {{
   Media(id: $id) {{
@@ -110,7 +121,12 @@ def clean_description(text: str | None) -> str | None:
 def official_links(media: dict) -> list[dict]:
     """Keep links to official platforms and the official site; skip social media."""
     links = []
+    seen_sites = set()
     for link in media.get("externalLinks") or []:
+        # Some platforms are listed once per region; one link per platform is enough.
+        if link["site"] in seen_sites:
+            continue
+        seen_sites.add(link["site"])
         if link["type"] == "STREAMING":
             links.append({"site": link["site"], "url": link["url"], "kind": "official"})
         elif link["site"] == "Official Site":
@@ -143,6 +159,12 @@ def to_catalogue_item(media: dict) -> CatalogueItem:
 def search(query: str, category: str | None) -> list[CatalogueItem]:
     filters = CATEGORY_FILTERS.get(category, {}) if category else {}
     data = _post(SEARCH_QUERY, {"search": query, **filters})
+    return [to_catalogue_item(media) for media in data["Page"]["media"]]
+
+
+def trending(category: str | None) -> list[CatalogueItem]:
+    filters = CATEGORY_FILTERS.get(category, {}) if category else {}
+    data = _post(TRENDING_QUERY, filters)
     return [to_catalogue_item(media) for media in data["Page"]["media"]]
 
 

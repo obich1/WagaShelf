@@ -25,6 +25,15 @@ def search(
         raise HTTPException(status_code=502, detail="The title catalogues can't be reached right now")
 
 
+@router.get("/trending", response_model=SearchResponse)
+def trending(category: MediaType | Literal["all"] = "all"):
+    """Popular titles right now, for browsing Discover before searching."""
+    try:
+        return catalogue.trending(category)
+    except SourceUnavailable:
+        raise HTTPException(status_code=502, detail="The title catalogues can't be reached right now")
+
+
 @router.get("/titles/{source}/{source_id}", response_model=TitleRead)
 def get_title(source: Source, source_id: str, session: SessionDep):
     """A title's detail page data, refreshed from its source and stored in the shared catalogue."""

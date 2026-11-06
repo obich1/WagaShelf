@@ -35,6 +35,8 @@ def fake_sources(monkeypatch):
     """Both sources work and return one result each. Tests can override them."""
     monkeypatch.setattr(anilist, "search", lambda query, category: [anime()])
     monkeypatch.setattr(openlibrary, "search", lambda query: [book()])
+    monkeypatch.setattr(anilist, "trending", lambda category: [anime(title="Trending anime")])
+    monkeypatch.setattr(openlibrary, "trending", lambda: [book(title="Trending book")])
     monkeypatch.setattr(anilist, "get_title", lambda source_id: anime(source_id=source_id))
     monkeypatch.setattr(openlibrary, "get_title", lambda source_id: book(source_id=source_id))
 
@@ -96,6 +98,29 @@ def test_search_rejects_unknown_category(client):
     response = client.get("/search", params={"q": "one", "category": "podcast"})
 
     assert response.status_code == 422
+
+
+# --- Trending -------------------------------------------------------------
+
+
+def test_trending_combines_both_sources(client, fake_sources):
+    response = client.get("/trending")
+
+    assert response.status_code == 200
+    assert [r["title"] for r in response.json()["results"]] == ["Trending anime", "Trending book"]
+
+
+def test_trending_books_only(client, fake_sources):
+    response = client.get("/trending", params={"category": "book"})
+
+    assert [r["title"] for r in response.json()["results"]] == ["Trending book"]
+
+
+def test_trending_fails_when_every_source_is_down(client, monkeypatch):
+    monkeypatch.setattr(anilist, "trending", unavailable)
+    monkeypatch.setattr(openlibrary, "trending", unavailable)
+
+    assert client.get("/trending").status_code == 502
 
 
 # --- Title details --------------------------------------------------------

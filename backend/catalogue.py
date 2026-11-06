@@ -15,11 +15,33 @@ ANILIST_CATEGORIES = {"anime", "manga", "manhwa", "manhua", "novel"}
 
 def search(query: str, category: str | None) -> SearchResponse:
     """Search the sources that cover the category ("all" or None searches every source)."""
+    return _from_sources(
+        category,
+        anilist_lookup=lambda: anilist.search(query, category),
+        openlibrary_lookup=lambda: openlibrary.search(query),
+    )
+
+
+def trending(category: str | None) -> SearchResponse:
+    """Titles that are popular right now in the external catalogues (for Discover)."""
+    return _from_sources(
+        category,
+        anilist_lookup=lambda: anilist.trending(category),
+        openlibrary_lookup=openlibrary.trending,
+    )
+
+
+def _from_sources(category, anilist_lookup, openlibrary_lookup) -> SearchResponse:
+    """Run the lookup for each source that covers the category and combine the results.
+
+    If one source is down, the others' results are still returned, and the response says
+    which source was unavailable.
+    """
     searches = []
     if category in (None, "all") or category in ANILIST_CATEGORIES:
-        searches.append(("AniList", lambda: anilist.search(query, category)))
+        searches.append(("AniList", anilist_lookup))
     if category in (None, "all", "book"):
-        searches.append(("Open Library", lambda: openlibrary.search(query)))
+        searches.append(("Open Library", openlibrary_lookup))
 
     results: list[CatalogueItem] = []
     unavailable: list[str] = []
