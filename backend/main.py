@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import create_db_and_tables
-from routers import catalogue
+from routers import catalogue, library
 
 # Websites allowed to call this API from a browser (comma-separated).
 # Locally that's the Vite dev server; in production, the GitHub Pages site.
@@ -30,6 +30,7 @@ app.add_middleware(
 )
 
 app.include_router(catalogue.router)
+app.include_router(library.router)
 
 
 @app.get("/health")

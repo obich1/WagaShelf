@@ -34,3 +34,31 @@ def client(engine):
     app.dependency_overrides[get_session] = get_test_session
     yield TestClient(app)
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def sign_in(client):
+    """Call sign_in("user_a") to make the client's requests come from that user.
+
+    This replaces Clerk token checking (tested separately in test_auth.py), so library
+    tests don't need real tokens.
+    """
+    from fastapi import Depends
+
+    from auth import get_current_user
+    from models import User
+
+    def sign_in_as(user_id: str):
+        def fake_current_user(session: Session = Depends(get_session)) -> User:
+            user = session.get(User, user_id)
+            if user is None:
+                user = User(id=user_id)
+                session.add(user)
+                session.commit()
+                session.refresh(user)
+            return user
+
+        app.dependency_overrides[get_current_user] = fake_current_user
+        return client
+
+    return sign_in_as

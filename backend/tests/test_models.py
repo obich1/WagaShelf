@@ -113,3 +113,11 @@ def test_entry_must_point_to_an_existing_title(session):
     session.add(LibraryEntry(user_id="user_a", title_id=999))
     with pytest.raises(IntegrityError):
         session.commit()
+
+
+def test_postgres_urls_use_the_psycopg_driver():
+    from database import normalize_url
+
+    assert normalize_url("postgres://u:p@host/db") == "postgresql+psycopg://u:p@host/db"
+    assert normalize_url("postgresql://u:p@host/db") == "postgresql+psycopg://u:p@host/db"
+    assert normalize_url("sqlite:///wagashelf.db") == "sqlite:///wagashelf.db"

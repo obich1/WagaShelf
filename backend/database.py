@@ -10,12 +10,23 @@ DEFAULT_DATABASE_FILE = Path(__file__).resolve().parent / "wagashelf.db"
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_DATABASE_FILE}")
 
 
+def normalize_url(url: str) -> str:
+    """Hosts give PostgreSQL URLs as postgres:// or postgresql://; SQLAlchemy needs to be told
+    to use the psycopg (version 3) driver."""
+    for prefix in ("postgres://", "postgresql://"):
+        if url.startswith(prefix):
+            return "postgresql+psycopg://" + url[len(prefix):]
+    return url
+
+
 def make_engine(url: str):
     """Create an engine: the object that manages connections to one database."""
+    url = normalize_url(url)
     is_sqlite = url.startswith("sqlite")
     # FastAPI can use a SQLite connection from a different thread than the one that opened it.
     connect_args = {"check_same_thread": False} if is_sqlite else {}
-    new_engine = create_engine(url, connect_args=connect_args)
+    # pool_pre_ping checks a connection still works before using it (hosted databases close idle ones).
+    new_engine = create_engine(url, connect_args=connect_args, pool_pre_ping=True)
 
     if is_sqlite:
         # SQLite ignores foreign keys unless each new connection turns them on.

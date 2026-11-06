@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from typing import Annotated, Literal
 
 from sqlalchemy import JSON, Column, UniqueConstraint
+from pydantic import field_validator
 from sqlmodel import Field, SQLModel
 
 # Allowed values, used by the API models at the bottom of this file.
@@ -140,3 +141,9 @@ class LibraryEntryRead(SQLModel):
     added_at: datetime
     updated_at: datetime
     title: TitleRead
+
+    @field_validator("added_at", "updated_at")
+    @classmethod
+    def mark_as_utc(cls, value: datetime) -> datetime:
+        """SQLite forgets time zones, so say explicitly that stored times are UTC."""
+        return value if value.tzinfo else value.replace(tzinfo=timezone.utc)
