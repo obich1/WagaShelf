@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from typing import Annotated, Literal
 
-from sqlalchemy import JSON, Column, UniqueConstraint
+from sqlalchemy import JSON, Column, DateTime, UniqueConstraint
 from pydantic import field_validator
 from sqlmodel import Field, SQLModel
 
@@ -15,13 +15,18 @@ def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def timestamp_field():
+    """A creation/update time, stored with its time zone (UTC) in PostgreSQL."""
+    return Field(default_factory=utc_now, sa_type=DateTime(timezone=True))
+
+
 class User(SQLModel, table=True):
     """A WagaShelf user. Sign-in is handled by Clerk, so the id is Clerk's user id."""
 
     __tablename__ = "users"
 
     id: str = Field(primary_key=True)
-    created_at: datetime = Field(default_factory=utc_now)
+    created_at: datetime = timestamp_field()
 
 
 class Title(SQLModel, table=True):
@@ -66,8 +71,8 @@ class LibraryEntry(SQLModel, table=True):
     progress: int | None = None  # episodes, chapters or pages, depending on the media type
     rating: float | None = None
     notes: str | None = None  # private: only the owner ever sees these
-    added_at: datetime = Field(default_factory=utc_now)
-    updated_at: datetime = Field(default_factory=utc_now)
+    added_at: datetime = timestamp_field()
+    updated_at: datetime = timestamp_field()
 
 
 # ---------------------------------------------------------------------------
