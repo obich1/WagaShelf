@@ -1,8 +1,13 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
 from sqlalchemy import event
 from sqlmodel import Session, SQLModel, create_engine
+
+# Read settings from backend/.env if it exists (local development). On Render, the same
+# settings come from the dashboard instead. Real environment variables always win.
+load_dotenv(Path(__file__).resolve().parent / ".env")
 
 # By default the database is a SQLite file next to this file, so it's the same file
 # wherever the server is started from. In production, DATABASE_URL points to PostgreSQL.

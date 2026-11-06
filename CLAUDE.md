@@ -28,7 +28,8 @@ I'm Obi, a second-year Computer Science student at UPEI. WagaShelf is my portfol
 
 - Windows, PowerShell, PyCharm.
 - Backend: `backend\.venv` (activate with `.\.venv\Scripts\Activate.ps1` from `backend`), run with `fastapi dev main.py`, test with `pytest -v`.
-- Frontend: from `frontend`, `npm install` once, then `npm run dev`.
+- Frontend: from `frontend`, `npm install` once, then `npm run dev`; `npm run lint` and `npm run build` before pushing.
+- Local settings: `backend/.env` and `frontend/.env.local` (copy the `.env.example` files). Deployment steps: `docs/deployment.md`.
 - **Don't write files with PowerShell's `>` redirect** (it saves UTF-16). Use `Out-File -Encoding utf8` or write the file directly.
 
 ## Architecture
@@ -50,6 +51,8 @@ PostgreSQL in production (Neon), SQLite locally and in tests
 - **Search:** the backend calls AniList and Open Library and returns one common result format.
 
 ## MVP scope (from the product plan)
+
+**Status (November 6):** the MVP below is built on the `mvp` branch (backend tests, CI, deploy config). Deployment needs Obi's Clerk, Neon and Render accounts.
 
 **In:** universal search with category filters (anime, manga, manhwa, manhua, novels via AniList; books via Open Library); title detail pages with official links where available; add to shelf with optional status; shelves per media type that appear dynamically, with status filters; editing status, progress, rating and private notes; removing titles; Home dashboard; sign-in with Clerk; dark, cozy UI; installable PWA.
 

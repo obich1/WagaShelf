@@ -1,55 +1,84 @@
 # WagaShelf
 
-*Waga* (我が) means "my" in Japanese: **WagaShelf** is your personal shelf for anime, manga, manhwa, manhua and novels, all tracked in one place.
+*Waga* (我が) means "my" in Japanese. **WagaShelf** is one cozy shelf for everything you watch
+and read: anime, manga, manhwa, manhua, novels and books, all in one library.
 
- **🌐 [Live Demo](https://obich1.github.io/WagaShelf/)**
- ![WagaShelf screenshot](wagashelf-demo.png)
- 
+People watch and read across many platforms, so their lists end up scattered or forgotten.
+WagaShelf gives them one place to save titles, optionally track progress, keep private notes,
+and find where to watch or read officially.
+
+**Live app:** https://obich1.github.io/WagaShelf/
+
+![WagaShelf home dashboard](docs/screenshots/home.png)
+
+| Discover | Title page | On a phone |
+|---|---|---|
+| ![Discover](docs/screenshots/discover.png) | ![Title page](docs/screenshots/title.png) | ![Shelves on a phone](docs/screenshots/mobile-shelves.png) |
 
 ## Features
 
-- **Search real titles** from the AniList database, with cover art, media type and episode or chapter counts
-- **Click a title cover to fill in the form**, then choose your status and rating before adding it
-- **Add titles manually** when they aren't on AniList
-- **Edit entries in place**: change status from a dropdown and update ratings (1–10) directly on your shelf
-- **Delete entries**, with a confirmation step
-- **Status labels that match the media type**: "Watching" and "Plan to Watch" for anime, "Reading" and "Plan to Read" for everything else
-- **Duplicate protection**: exact duplicates are blocked by AniList ID, and matching titles trigger a warning
-- **Error handling**: clear messages when a search fails, finds nothing, or can't reach the API
-- **Search with Enter**, and clear results with the search box's × button
-- **Saves your shelf** in the browser, so it's still there after a reload
+- **Universal search** across AniList and Open Library, with media-category filters, plus
+  trending titles to browse
+- **Title pages** with description, genres, release info and **official links** (e.g.
+  Crunchyroll, KakaoPage, Tapas)
+- **Saving comes first:** add a title in one click; status and progress are optional
+- **Shelves that build themselves:** one per media type you've saved, filterable by status, with
+  quick status changes and +1 progress
+- **Media-aware tracking:** episodes for anime, chapters for manga and novels, pages for books;
+  "Watching" vs "Reading" wording
+- **Ratings and private notes**
+- **Home dashboard:** continue where you left off, recently added, shelf overview
+- **Accounts** with Clerk; private by default
+- **Installable** on phones and desktops (PWA), with a mobile layout
 
-## Tech Stack
+## Tech stack
 
-- **Frontend:** HTML, CSS ([Pico.css](https://picocss.com)), JavaScript
-- **Data source:** [AniList GraphQL API](https://docs.anilist.co)
-- **Storage:** Browser localStorage (to be replaced by a backend database)
+| Part | Technology |
+|---|---|
+| Frontend | React, Vite, React Router, Clerk; hosted on GitHub Pages; installable PWA |
+| Backend | Python, FastAPI, SQLModel (Pydantic + SQLAlchemy), PyJWT; hosted on Render |
+| Database | PostgreSQL (Neon) in production, SQLite locally and in tests |
+| Data sources | AniList GraphQL API, Open Library API |
+| Quality | pytest test suite, GitHub Actions CI on every push and pull request |
 
-## How It Works
+## Architecture
 
-- Searches send a GraphQL query to AniList using `fetch` with `async`/`await`
-- AniList labels manhwa and manga both as `MANGA`, so WagaShelf works out the type from the `format` and `countryOfOrigin` fields (e.g. Korean → Manhwa, Chinese → Manhua)
-- Each shelf entry gets its own unique ID (`crypto.randomUUID()`), separate from the AniList ID of the title, so entries can be updated and deleted reliably
+```mermaid
+flowchart LR
+    user["👤 User"] --> spa["React app (PWA)<br/>GitHub Pages"]
+    spa -->|"sign-in"| clerk["Clerk"]
+    spa -->|"JSON + session token"| api["FastAPI<br/>Render"]
+    api --> db[("PostgreSQL<br/>Neon")]
+    api --> anilist["AniList"]
+    api --> openlib["Open Library"]
+```
 
-## How to Run
+The data model separates **shared catalogue information** (one `titles` row per title, used by
+everyone) from each **user's personal entry** (status, progress, rating and private notes).
+See [docs/architecture.md](docs/architecture.md) for the C4 diagrams, data model, API and the
+reasoning behind each design decision.
 
-1. Clone the repository
-2. Open `index.html` through a local web server, for example:
-   - PyCharm's built-in browser preview, or
-   - run `python -m http.server` in the project folder, then visit `http://localhost:8000`
+## Running it
 
-No installation or API key is needed.
+See [docs/deployment.md](docs/deployment.md) for local setup and deployment. In short:
 
-> **Note:** Searching depends on the AniList API. If AniList is down or has temporarily disabled its API, WagaShelf shows an error message and search won't return results. Manual adding and your saved shelf still work.
+```bash
+# backend (from backend/)
+pip install -r requirements.txt && fastapi dev main.py
+# frontend (from frontend/)
+npm install && npm run dev
+```
+
+## Product planning
+
+The product vision, principles, MVP scope and open decisions are in
+[docs/product-planning.md](docs/product-planning.md).
 
 ## Roadmap
 
-- [x] Shelf with add, edit, and delete (CRUD)
-- [x] AniList search with covers and episode/chapter counts
-- [ ] Separate shelf page
-- [ ] Python **FastAPI** backend with a REST API
-- [ ] SQL database for storing shelves
-- [ ] User accounts
-- [ ] Western comics via a second API (e.g. Comic Vine)
-- [ ] Collections for grouping titles
-- [ ] Taste matching: find users with similar ratings
+- [x] Universal search, title pages, shelves, tracking, accounts, PWA
+- [ ] Public profiles and shelf visibility
+- [ ] Movies and TV (TMDB), video games
+- [ ] Reviews and comments
+- [ ] Import from AniList
+- [ ] Recommendations
