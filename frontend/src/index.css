@@ -867,6 +867,10 @@ label {
 @media (max-width: 760px) {
   .site-header {
     gap: 1rem;
+    /* A backdrop-filter would make the header the reference box for the fixed bottom navigation
+       inside it, pinning the navigation over the header. A solid background avoids that. */
+    backdrop-filter: none;
+    background: var(--bg);
   }
 
   .main-nav {
