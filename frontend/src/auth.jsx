@@ -21,14 +21,16 @@ const appearance = {
   },
 }
 
+// Where to go after signing out: WagaShelf's home page, as a full address.
+// Clerk resolves relative addresses like "./" from the site's root (https://obich1.github.io/),
+// not from the app's folder (/WagaShelf/), which led to a 404 page. A full address leaves nothing
+// to resolve, and working it out from the current page means it's right on any host.
+const homeUrl = new URL('./', window.location.href).href
+
 export function AuthProvider({ children }) {
   if (!signInEnabled) return children
   return (
-    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} appearance={appearance} afterSignOutUrl="./">
-      {children}
-    </ClerkProvider>
-  )
-}
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} appearance={appearance} afterSignOutUrl={homeUrl}>
 
 const signedOutSession = { isLoaded: true, isSignedIn: false, userName: null, getToken: async () => null }
 
