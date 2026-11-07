@@ -11,13 +11,17 @@ sign-out leading to a 404 page, a blank site caused by a missing `{children}`, a
 navigation covering the header. This sprint makes the product sturdier and prepares for a
 meeting with a local tech leader on November 16.
 
+
+## Capacity
+
+Time is limited this week by midterms and quizzes, and by learning sessions on React plus WagaShelf's and General system
+architecture.The sprint backlog is kept small to fit.
 ## Sprint backlog
 
 | Item | Type | Notes |
 |---|---|---|
 | Rename "Novels" to "Light novels" | Design change | Display labels only; see ADR 006 |
 | Resilient catalogue | Design change | Shorter timeouts, save search and trending results, fall back to saved titles when a source is down; new ADR |
-| Architecture walkthrough: sessions 1, 2 and 8 | Learning | The big picture, following one request, trade-offs |
 | *Stretch:* render test in CI | Technical | Would have caught the blank-site bug |
 
 ## Sprint review (Saturday, November 14)
