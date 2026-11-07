@@ -8,8 +8,7 @@
 
 The MVP shipped on November 6 (PR #20). Reviewing it found three bugs, all fixed on November 7:
 sign-out leading to a 404 page, a blank site caused by a missing `{children}`, and the phone
-navigation covering the header. This sprint makes the product sturdier and prepares for a
-meeting with a local tech leader on November 16.
+navigation covering the header. This sprint makes the product sturdier.
 
 
 ## Capacity
