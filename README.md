@@ -69,10 +69,12 @@ pip install -r requirements.txt && fastapi dev main.py
 npm install && npm run dev
 ```
 
-## Product planning
+## Product planning and process
 
-The product vision, principles, MVP scope and open decisions are in
-[docs/product-planning.md](docs/product-planning.md).
+- [docs/product-planning.md](docs/product-planning.md): the product vision, principles, MVP scope and focus
+- [docs/decisions/](docs/decisions/): decision records explaining why each major choice was made
+- [docs/process.md](docs/process.md): how the work is organised (one-week Scrum sprints, a GitHub Projects board, a Definition of Done)
+- [docs/sprints/](docs/sprints/): each sprint's goal, review and retrospective
 
 ## Roadmap
 

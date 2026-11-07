@@ -203,8 +203,23 @@ If these flows work reliably, WagaShelf will have demonstrated its central value
 ## 11. Open Product Decisions
 
 These decisions should be resolved before implementation expands:
-- Which media categories will be supported in the first release?
-- Which catalogue/API sources can provide dependable title metadata, covers, and official links for those categories?
+- ~~Which media categories will be supported in the first release?~~ Resolved: see section 12.
+- ~~Which catalogue/API sources can provide dependable title metadata, covers, and official links for those categories?~~ Resolved: AniList for anime, manga, manhwa, manhua and light novels; Open Library for books.
 - What exact fields and status options are appropriate for each initial media type?
 - What profile information should users be able to customize?
 - Should users have one editable review per title, or be able to publish multiple reviews over time? This can be decided when public reviews move into scope.
+
+## 12. Focus and Expansion
+
+*Added 2026-11-07 after user feedback. Full reasoning: [decision record 006](decisions/006-focused-launch-categories.md).*
+
+The long-term vision stays broad: one library for every kind of media. The launch is focused on
+one community: people who follow stories across formats (for example *Solo Leveling* as a
+manhwa, an anime and a novel), plus the books they read.
+
+**Launch categories:** anime, manga, manhwa, manhua and light novels (from AniList), and books
+(from Open Library). "Light novels" replaces the earlier "Novels" label, because AniList's novel
+category contains light and web novels, while regular novels such as *Dune* are books.
+
+**Expansion rule:** a new media type (such as movies, TV or games) is added when at least a third
+of active users ask for it in interviews or feedback, and a dependable data source exists.
