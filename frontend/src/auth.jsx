@@ -30,11 +30,13 @@ const homeUrl = new URL('./', window.location.href).href
 export function AuthProvider({ children }) {
   if (!signInEnabled) return children
   return (
-    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} appearance={appearance} afterSignOutUrl={homeUrl}></ClerkProvider>
+  <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}
+    appearance={appearance} afterSignOutUrl={homeUrl}>
+    {children}
+  </ClerkProvider>
 
     )
 }
-
 
 const signedOutSession = { isLoaded: true, isSignedIn: false, userName: null, getToken: async () => null }
 
