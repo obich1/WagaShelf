@@ -55,7 +55,10 @@ around a minute. Open the app a minute before a demo.
 
 **3. Frontend: GitHub Pages**
 
-1. In the GitHub repository: **Settings → Pages → Source: GitHub Actions**.
+1. In the GitHub repository: **Settings → Pages → Source: GitHub Actions**. This matters: with
+   the default "Deploy from a branch", GitHub also publishes the repository's raw files on every
+   merge, and because the repository root has no `index.html`, it shows `README.md` instead of
+   the app (seen on 2026-11-07).
 2. **Settings → Secrets and variables → Actions → Variables**, add:
    - `VITE_API_URL` = your Render URL (e.g. `https://wagashelf-api.onrender.com`)
    - `VITE_CLERK_PUBLISHABLE_KEY` = your Clerk publishable key
