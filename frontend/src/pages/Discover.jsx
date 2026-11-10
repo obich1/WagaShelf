@@ -68,7 +68,7 @@ export default function Discover() {
     <div className="page">
       <header className="page-header">
         <h1>Discover</h1>
-        <p className="lede">Search anime, manga, manhwa, manhua, novels and books in one place.</p>
+        <p className="lede">Search anime, manga, manhwa, manhua, Light novels and books in one place.</p>
       </header>
 
       <form className="search-bar" role="search" onSubmit={submit}>

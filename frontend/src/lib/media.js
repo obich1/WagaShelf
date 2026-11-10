@@ -5,7 +5,7 @@ export const MEDIA_TYPES = {
   manga: { label: 'Manga', plural: 'Manga', unit: 'chapter', totalField: 'total_chapters', verb: 'read' },
   manhwa: { label: 'Manhwa', plural: 'Manhwa', unit: 'chapter', totalField: 'total_chapters', verb: 'read' },
   manhua: { label: 'Manhua', plural: 'Manhua', unit: 'chapter', totalField: 'total_chapters', verb: 'read' },
-  novel: { label: 'Novel', plural: 'Novels', unit: 'chapter', totalField: 'total_chapters', verb: 'read' },
+  novel: { label: 'Light Novel', plural: 'Light Novels', unit: 'chapter', totalField: 'total_chapters', verb: 'read' },
   book: { label: 'Book', plural: 'Books', unit: 'page', totalField: 'total_pages', verb: 'read' },
 }
 

@@ -13,7 +13,7 @@ function Welcome() {
         <p className="eyebrow">我が · “my”</p>
         <h1>One cozy shelf for everything you watch and read.</h1>
         <p className="lede">
-          Save anime, manga, manhwa, manhua, novels and books in one library. Track your progress if you want to,
+          Save anime, manga, manhwa, manhua, Light novels and books in one library. Track your progress if you want to,
           keep private notes, and find where to watch or read officially.
         </p>
         <div className="hero-actions">
