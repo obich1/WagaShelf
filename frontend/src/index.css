@@ -324,8 +324,44 @@ label {
 
 .search-bar input {
   font-size: 1.05rem;
-  padding: 0.8rem 1rem;
+  padding: 0.8rem 3rem 0.8rem 1rem; /* extra space on the right for the clear button */
   border-radius: 999px;
+}
+
+/* Holds the search box and its clear button, so the button can sit inside the box. */
+.search-field {
+  position: relative;
+  flex: 1;
+}
+
+.search-clear {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.search-clear:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+/* Hide the browser's own clear button (only some browsers draw one), so there's never two. */
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 /* ---------- Messages ---------- */

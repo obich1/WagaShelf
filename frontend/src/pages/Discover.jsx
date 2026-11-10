@@ -1,5 +1,5 @@
 // Discover: universal search with media-category filters, plus trending titles when nothing is searched.
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { request } from '../api/client'
@@ -23,6 +23,7 @@ export default function Discover() {
   const [error, setError] = useState(null)
   const [attempt, setAttempt] = useState(0)
   const { entryFor } = useLibrary()
+  const searchInput = useRef(null)
 
   useEffect(() => setDraft(query), [query])
 
@@ -55,6 +56,14 @@ export default function Discover() {
     update({ q: draft.trim() })
   }
 
+  // Empty the search box and go back to trending titles. The cursor stays in the box,
+  // ready for a new search.
+  function clearSearch() {
+    setDraft('')
+    if (query) update({ q: '' })
+    searchInput.current?.focus()
+  }
+
   return (
     <div className="page">
       <header className="page-header">
@@ -63,14 +72,24 @@ export default function Discover() {
       </header>
 
       <form className="search-bar" role="search" onSubmit={submit}>
-        <input
-          type="search"
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          placeholder="Search for a title…"
-          aria-label="Search for a title"
-          maxLength={100}
-        />
+        <div className="search-field">
+          <input
+            ref={searchInput}
+            type="search"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => e.key === 'Escape' && clearSearch()}
+            placeholder="Search for a title…"
+            aria-label="Search for a title"
+            maxLength={100}
+          />
+          {/* Our own clear button: browsers only sometimes draw one (not on iPhones), so we don't rely on it. */}
+          {draft && (
+            <button type="button" className="search-clear" aria-label="Clear search" onClick={clearSearch}>
+              ×
+            </button>
+          )}
+        </div>
         <button className="button" type="submit">
           Search
         </button>
