@@ -12,7 +12,7 @@ flowchart TB
     user["👤 User<br/>Someone who watches and reads<br/>many kinds of media"]
     waga["WagaShelf<br/>Search titles, save them to personal shelves,<br/>track progress, find official links"]
     clerk["Clerk<br/>(sign-in service)"]
-    anilist["AniList<br/>(anime, manga, manhwa,<br/>manhua, novels)"]
+    anilist["AniList<br/>(anime, manga, manhwa,<br/>manhua, Light novels)"]
     openlib["Open Library<br/>(books)"]
 
     user -->|"uses, in a browser or<br/>as an installed app"| waga
