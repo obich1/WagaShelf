@@ -18,7 +18,7 @@ export function statusLabel(status, mediaType) {
   const watch = MEDIA_TYPES[mediaType]?.verb === 'watch'
   switch (status) {
     case 'planning':
-      return watch ? 'Want to watch' : 'Want to read'
+      return watch ? 'Plan to watch' : 'Plan to read'
     case 'current':
       return watch ? 'Watching' : 'Reading'
     case 'revisiting':
