@@ -19,9 +19,9 @@ architecture.The sprint backlog is kept small to fit.
 
 | Item | Type | Notes |
 |---|---|---|
-|No "X" to clear Search bar on PWA| Bug| Done PR |
-| Rename "Novels" to "Light novels" | Design change | Display labels only; see ADR 006 |
-| Shorter timeouts for external catalogue requests | Design change | Per- source timeouts |
+|No "X" to clear Search bar on PWA| Bug| Done |
+| Rename "Novels" to "Light novels" | Design change | Done |
+| Shorter timeouts for external catalogue requests | Design change | Per-source timeouts |
 | *Stretch:* render test in CI | Technical | Would have caught the blank-site bug |
 
 ## Sprint review (Saturday, November 14)
