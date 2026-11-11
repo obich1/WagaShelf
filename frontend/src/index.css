@@ -729,6 +729,8 @@ input[type='search']::-webkit-search-cancel-button {
 
 /* The covers stand on the plank, facing out, and scroll sideways. */
 .shelf-books {
+  --shelf-book-width: clamp(118px, 30vw, 150px);
+  position: relative; /* so each cover's position is measured from the row (for the curve) */
   list-style: none;
   margin: 0;
   padding: 1rem 0.5rem 0;
@@ -744,7 +746,7 @@ input[type='search']::-webkit-search-cancel-button {
 }
 
 .shelf-book {
-  flex: 0 0 clamp(118px, 30vw, 150px);
+  flex: 0 0 var(--shelf-book-width);
   scroll-snap-align: start;
   display: grid;
   gap: 0.35rem;
@@ -829,6 +831,32 @@ input[type='search']::-webkit-search-cancel-button {
   height: 100%;
   border-radius: 4px;
   background: var(--accent);
+}
+
+/* Curved shelf: covers snap to the centre, and the curve hook turns each one by its distance from it.
+   The padding lets the first and last covers reach the centre too. */
+.shelf-books-curved {
+  perspective: 700px;
+  perspective-origin: 50% 100%; /* look from the shelf's level, so covers recede along the plank */
+  padding-inline: calc(50% - var(--shelf-book-width) / 2);
+  scroll-padding-inline: 0;
+  gap: 0.4rem;
+}
+
+.shelf-books-curved .shelf-book {
+  scroll-snap-align: center;
+  transform-origin: 50% 100%; /* shrink towards the bottom, so covers keep standing on the plank */
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.shelf-books-curved .shelf-book-link .cover {
+  transform: none; /* the whole book turns with the curve instead of the flat row's tilt */
+}
+
+.shelf-books-curved .shelf-book-link:hover .cover,
+.shelf-books-curved .shelf-book-link:focus-visible .cover {
+  transform: translateY(-6px);
 }
 
 /* The plank: a lighter top surface, a thicker front edge, and two brackets fixing it to the wall. */
