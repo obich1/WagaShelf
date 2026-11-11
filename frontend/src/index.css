@@ -738,6 +738,7 @@ input[type='search']::-webkit-search-cancel-button {
   align-items: flex-end;
   gap: 1.1rem;
   overflow-x: auto;
+  overflow-y: hidden;
   /* "proximity": snap only when a swipe ends near a cover. "mandatory" forced a jump to the next
      cover on even a slight sideways movement, which caught vertical swipes on phones. */
   scroll-snap-type: x proximity;
