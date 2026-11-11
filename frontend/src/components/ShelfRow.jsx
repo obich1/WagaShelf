@@ -1,8 +1,10 @@
-// One shelf on My Shelves: a wall, a row of covers facing out, and a plank with brackets.
+// One shelf on My Shelves: a wall, a curved row of covers facing out, and a plank with brackets.
 // Each cover opens its title page; the heading opens the full shelf.
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 import { MEDIA_TYPES, plural, statusLabel, titlePath, totalFor } from '../lib/media'
+import { usePrefersReducedMotion, useCurvedRow } from '../lib/useCurvedRow'
 import { Cover } from './common'
 
 const PREVIEW = 8
@@ -36,6 +38,11 @@ function ShelfBook({ entry }) {
 
 export default function ShelfRow({ type, entries }) {
   const shelfPath = `/shelf/${type}`
+  const preview = entries.slice(0, PREVIEW)
+  const rowRef = useRef(null)
+  // Curved by default; a flat row for people who've asked their device for less motion.
+  const curved = !usePrefersReducedMotion()
+  useCurvedRow(rowRef, curved, preview.length)
   return (
     <section className="shelf-wall" aria-labelledby={`shelf-${type}`}>
       <div className="shelf-wall-header">
@@ -47,8 +54,8 @@ export default function ShelfRow({ type, entries }) {
         </Link>
       </div>
 
-      <ul className="shelf-books">
-        {entries.slice(0, PREVIEW).map((entry) => (
+      <ul ref={rowRef} className={`shelf-books${curved ? ' shelf-books-curved' : ''}`}>
+        {preview.map((entry) => (
           <ShelfBook key={entry.id} entry={entry} />
         ))}
       </ul>
