@@ -2,8 +2,9 @@
 import { Link } from 'react-router-dom'
 
 import { useSession } from '../auth'
-import { Cover, EmptyState, ErrorMessage, Loading, SignInPrompt } from '../components/common'
-import { MEDIA_TYPES, groupByMediaType, plural } from '../lib/media'
+import { EmptyState, ErrorMessage, Loading, SignInPrompt } from '../components/common'
+import ShelfRow from '../components/ShelfRow'
+import { groupByMediaType, plural } from '../lib/media'
 import { useLibrary } from '../library/LibraryContext'
 
 export default function Shelves() {
@@ -39,18 +40,7 @@ export default function Shelves() {
 
       <div className="shelf-list">
         {shelves.map(({ type, entries: shelfEntries }) => (
-          <Link key={type} to={`/shelf/${type}`} className="shelf-row">
-            <div className="shelf-row-header">
-              <h2>{MEDIA_TYPES[type].plural}</h2>
-              <span className="muted">{plural(shelfEntries.length, 'title')} →</span>
-            </div>
-            <div className="shelf-row-covers" aria-hidden="true">
-              {shelfEntries.slice(0, 8).map((entry) => (
-                <Cover key={entry.id} src={entry.title.cover_url} alt={entry.title.title} size="small" />
-              ))}
-            </div>
-            <div className="shelf-plank" aria-hidden="true" />
-          </Link>
+          <ShelfRow key={type} type={type} entries={shelfEntries} />
         ))}
       </div>
     </div>
