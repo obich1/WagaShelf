@@ -65,6 +65,11 @@ around a minute. Open the app a minute before a demo.
 3. Merging into `main` runs `.github/workflows/deploy-frontend.yml`, which builds the app and
    publishes it at `https://obich1.github.io/WagaShelf/`. You can also run it by hand from the
    **Actions** tab.
+4. **Link previews:** the `og:` tags in `frontend/index.html` give LinkedIn, Discord and others
+   a title, description and image (`frontend/public/og-image.png`, 1200 × 630). `og:url` and
+   `og:image` are full addresses, so **update them if the site moves** (e.g. to Vercel). Sites
+   keep a preview for days: after a change, paste the link into LinkedIn's Post Inspector
+   (linkedin.com/post-inspector) to refresh it.
 
 **4. Clerk settings**
 
