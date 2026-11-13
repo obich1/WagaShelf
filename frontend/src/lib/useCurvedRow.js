@@ -22,6 +22,10 @@ const DEPTH = 90 // pixels pushed back per cover width
 const SHRINK = 0.12
 const FADE = 0.28
 
+// How long the row must be still (and untouched) before it settles on the nearest cover.
+// Phones keep firing scroll events while a swipe glides, so this only counts once it has stopped.
+const SETTLE_DELAY = 140 // milliseconds
+
 // Every time the row scrolls, place each cover on the curve.
 // `count` is the number of covers, so the effect runs again when covers are added or removed.
 //
@@ -68,6 +72,40 @@ export function useCurvedRow(rowRef, enabled, count) {
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(curve)
     }
+
+    // Settling: CSS snapping is set to "proximity" (so vertical swipes don't catch on the shelf),
+    // which means a fast swipe on a phone can stop between two covers. Once the row has stopped
+    // and no finger is on the screen, glide to the nearest cover. A small sideways nudge from a
+    // vertical swipe just settles back on the same cover.
+    let touching = false
+    let settleTimer = 0
+    const settle = () => {
+      if (touching || centers.length === 0) return
+      const middle = row.scrollLeft + row.clientWidth / 2
+      let nearest = centers[0]
+      for (const center of centers) {
+        if (Math.abs(center - middle) < Math.abs(nearest - middle)) nearest = center
+      }
+      const left = nearest - row.clientWidth / 2
+      if (Math.abs(left - row.scrollLeft) > 2) row.scrollTo({ left, behavior: 'smooth' })
+    }
+    const scheduleSettle = () => {
+      clearTimeout(settleTimer)
+      settleTimer = setTimeout(settle, SETTLE_DELAY)
+    }
+    const onScroll = () => {
+      schedule()
+      scheduleSettle()
+    }
+    const onTouchStart = () => {
+      touching = true
+      clearTimeout(settleTimer)
+    }
+    const onTouchEnd = () => {
+      touching = false
+      scheduleSettle()
+    }
+
     const remeasure = () => {
       measure()
       schedule()
@@ -75,13 +113,20 @@ export function useCurvedRow(rowRef, enabled, count) {
 
     measure()
     curve()
-    row.addEventListener('scroll', schedule, { passive: true })
+    row.addEventListener('scroll', onScroll, { passive: true })
+    row.addEventListener('touchstart', onTouchStart, { passive: true })
+    row.addEventListener('touchend', onTouchEnd, { passive: true })
+    row.addEventListener('touchcancel', onTouchEnd, { passive: true })
     const resize = new ResizeObserver(remeasure)
     resize.observe(row)
 
     return () => {
       cancelAnimationFrame(frame)
-      row.removeEventListener('scroll', schedule)
+      clearTimeout(settleTimer)
+      row.removeEventListener('scroll', onScroll)
+      row.removeEventListener('touchstart', onTouchStart)
+      row.removeEventListener('touchend', onTouchEnd)
+      row.removeEventListener('touchcancel', onTouchEnd)
       resize.disconnect()
       for (const book of row.children) {
         book.style.transform = ''
