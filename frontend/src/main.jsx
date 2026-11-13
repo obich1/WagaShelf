@@ -1,23 +1,25 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { HashRouter } from 'react-router-dom'
+import { RouterProvider, createHashRouter } from 'react-router-dom'
 
 import App from './App'
 import { AuthProvider } from './auth'
 import './index.css'
 import { LibraryProvider } from './library/LibraryContext'
 
+// The router uses "hash" URLs: the page lives in the part after "#", e.g. /WagaShelf/#/discover.
+// GitHub Pages only serves real files, so this avoids 404 errors when refreshing a page.
+// createHashRouter (a "data router") instead of <HashRouter> so that <ScrollRestoration> in App works.
+// Every path goes to App, which picks the page with its own <Routes>.
+const router = createHashRouter([{ path: '*', element: <App /> }])
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* HashRouter keeps the page in the part of the URL after "#", e.g. /WagaShelf/#/discover.
-        GitHub Pages only serves real files, so this avoids 404 errors when refreshing a page. */}
-    <HashRouter>
-      <AuthProvider>
-        <LibraryProvider>
-          <App />
-        </LibraryProvider>
-      </AuthProvider>
-    </HashRouter>
+    <AuthProvider>
+      <LibraryProvider>
+        <RouterProvider router={router} />
+      </LibraryProvider>
+    </AuthProvider>
   </StrictMode>,
 )
 

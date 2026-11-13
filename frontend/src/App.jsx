@@ -1,5 +1,5 @@
 // The app's layout (header and navigation) and its pages (routes).
-import { NavLink, Route, Routes } from 'react-router-dom'
+import { NavLink, Route, Routes, ScrollRestoration } from 'react-router-dom'
 
 import { AccountMenu, SignInLink, signInEnabled, useSession } from './auth'
 import { EmptyState } from './components/common'
@@ -55,6 +55,8 @@ export default function App() {
           <Route path="*" element={<div className="page"><EmptyState title="Page not found" /></div>} />
         </Routes>
       </main>
+      {/* New pages open at the top; Back returns to where you were on the previous page. */}
+      <ScrollRestoration />
     </>
   )
 }
