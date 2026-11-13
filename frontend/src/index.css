@@ -1005,10 +1005,45 @@ input[type='search']::-webkit-search-cancel-button {
 
 .shelf-item-meta {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1rem;
   color: var(--muted);
   font-size: 0.9rem;
   margin: 0.25rem 0 0.6rem;
+}
+
+/* The progress text doubles as a button: tap it to type a number. */
+.progress-edit-button {
+  padding: 0.1rem 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline dotted color-mix(in srgb, var(--muted) 60%, transparent);
+  text-underline-offset: 3px;
+}
+
+.progress-edit-button:hover {
+  color: var(--accent);
+}
+
+.progress-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.progress-edit-input {
+  width: 5.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem; /* 16px or more, or iPhones zoom the page in when the box is tapped */
+}
+
+.progress-edit-problem {
+  flex-basis: 100%;
+  margin: 0;
 }
 
 .shelf-item-actions {
