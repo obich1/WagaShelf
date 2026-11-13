@@ -1,11 +1,102 @@
 // One shelf (e.g. Anime), filterable by status, with quick status and progress updates.
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 
 import { useSession } from '../auth'
 import { Cover, EmptyState, ErrorMessage, Loading, SignInPrompt } from '../components/common'
-import { MEDIA_TYPES, STATUSES, progressLabel, statusLabel, titlePath, totalFor } from '../lib/media'
+import { MEDIA_TYPES, STATUSES, plural, progressLabel, statusLabel, titlePath, totalFor } from '../lib/media'
 import { useLibrary } from '../library/LibraryContext'
+
+// The progress text ("12 / 24 episodes ✎"). Tapping it turns it into a number box:
+// Enter or tapping away saves, Escape cancels. Saving happens on blur only, so Enter just blurs
+// the box (otherwise Enter would save once and the blur that follows would save again).
+function ProgressEditor({ entry, total, unit, busy, onSave }) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState('')
+  const [problem, setProblem] = useState(null)
+  const cancelled = useRef(false)
+  const returnFocus = useRef(false) // after Enter or Escape, put the keyboard focus back on the button
+  const button = useRef(null)
+  const label = progressLabel(entry.progress, entry.title) || 'Add progress'
+
+  useEffect(() => {
+    if (!editing && returnFocus.current) {
+      returnFocus.current = false
+      button.current?.focus()
+    }
+  }, [editing])
+
+  function open() {
+    if (busy) return // not disabled while saving, so the keyboard focus can come back to it
+    setDraft(entry.progress == null ? '' : String(entry.progress))
+    setProblem(null)
+    cancelled.current = false
+    setEditing(true)
+  }
+
+  function finish() {
+    setEditing(false)
+    if (cancelled.current) return
+    const text = draft.trim()
+    const progress = text === '' ? null : Number(text)
+    if (progress === (entry.progress ?? null)) return
+    if (progress !== null && (!Number.isInteger(progress) || progress < 0)) {
+      setProblem(`Progress has to be a whole number of ${unit}s.`)
+      return
+    }
+    if (progress !== null && total != null && progress > total) {
+      setProblem(`There ${total === 1 ? 'is' : 'are'} only ${plural(total, unit)}.`)
+      return
+    }
+    setProblem(null)
+    onSave(progress)
+  }
+
+  function onKeyDown(event) {
+    if (event.key === 'Escape') cancelled.current = true
+    if (event.key === 'Escape' || event.key === 'Enter') {
+      event.preventDefault()
+      returnFocus.current = true
+      event.currentTarget.blur()
+    }
+  }
+
+  return (
+    <>
+      {editing ? (
+        <span className="progress-edit">
+          <input
+            className="progress-edit-input"
+            type="number"
+            min="0"
+            max={total ?? undefined}
+            inputMode="numeric"
+            aria-label={`Progress for ${entry.title.title}, in ${unit}s`}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onFocus={(e) => e.target.select()}
+            onKeyDown={onKeyDown}
+            onBlur={finish}
+            autoFocus
+          />
+          {total != null && <span>/ {plural(total, unit)}</span>}
+        </span>
+      ) : (
+        <button
+          ref={button}
+          type="button"
+          className="progress-edit-button"
+          onClick={open}
+          aria-busy={busy}
+          aria-label={`Edit progress: ${label}`}
+        >
+          {label} <span aria-hidden="true">✎</span>
+        </button>
+      )}
+      {problem && <span className="form-message form-message-error progress-edit-problem">{problem}</span>}
+    </>
+  )
+}
 
 function ShelfItem({ entry }) {
   const { updateEntry } = useLibrary()
@@ -28,13 +119,17 @@ function ShelfItem({ entry }) {
     }
   }
 
-  function addOne() {
-    const progress = (entry.progress ?? 0) + 1
+  // The same rules for +1 and for typing a number: starting to track something with no status
+  // (or "planning") means you've started it, and reaching the total means you've finished it.
+  function setProgress(progress) {
     const changes = { progress }
-    // Starting to track something with no status means you've started it.
-    if (!entry.status || entry.status === 'planning') changes.status = 'current'
-    if (total != null && progress >= total) changes.status = 'completed'
+    if (progress != null && progress > 0 && (!entry.status || entry.status === 'planning')) changes.status = 'current'
+    if (progress != null && total != null && progress >= total) changes.status = 'completed'
     change(changes)
+  }
+
+  function addOne() {
+    setProgress((entry.progress ?? 0) + 1)
   }
 
   return (
@@ -47,7 +142,7 @@ function ShelfItem({ entry }) {
           {title.title}
         </Link>
         <div className="shelf-item-meta">
-          {progressLabel(entry.progress, title) && <span>{progressLabel(entry.progress, title)}</span>}
+          <ProgressEditor entry={entry} total={total} unit={unit} busy={busy} onSave={setProgress} />
           {entry.rating != null && <span>★ {entry.rating}</span>}
         </div>
         <div className="shelf-item-actions">
