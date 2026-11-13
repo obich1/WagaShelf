@@ -40,7 +40,7 @@ function ShelfItem({ entry }) {
   return (
     <li className="shelf-item">
       <Link to={titlePath(title)} className="shelf-item-cover">
-        <Cover src={title.cover_url} alt={title.title} size="small" />
+        <Cover src={title.cover_url} alt={title.title} size="list" />
       </Link>
       <div className="shelf-item-body">
         <Link to={titlePath(title)} className="shelf-item-title">

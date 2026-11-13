@@ -461,6 +461,11 @@ input[type='search']::-webkit-search-cancel-button {
   border-radius: calc(var(--cover-radius) * 0.45);
 }
 
+.cover-list {
+  width: 88px;
+  border-radius: calc(var(--cover-radius) * 0.6);
+}
+
 .cover-medium {
   width: 100%;
 }
@@ -481,7 +486,8 @@ input[type='search']::-webkit-search-cancel-button {
   overflow: hidden;
 }
 
-.cover-small.cover-missing span {
+.cover-small.cover-missing span,
+.cover-list.cover-missing span {
   display: none;
 }
 
@@ -835,6 +841,52 @@ input[type='search']::-webkit-search-cancel-button {
   height: 100%;
   border-radius: 4px;
   background: var(--accent);
+}
+
+/* Keeps a row the same height as a status line without showing anything. */
+.shelf-book-placeholder {
+  visibility: hidden;
+}
+
+/* "See all": shaped like a cover, but drawn as an open slot on the shelf. */
+.shelf-see-all-cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px dashed color-mix(in srgb, var(--muted) 45%, transparent);
+  box-shadow: none;
+}
+
+.shelf-see-all-more {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.shelf-see-all .shelf-book-link:hover .shelf-see-all-cover,
+.shelf-see-all .shelf-book-link:focus-visible .shelf-see-all-cover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* The wall opens the full shelf when tapped: a pointer and a slightly lighter wall show that.
+   Only when the pointer is on the wall itself, not on a cover or link. */
+.shelf-wall-tappable {
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.shelf-wall-tappable:hover:not(:has(a:hover)) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -30px 40px rgba(0, 0, 0, 0.18),
+    inset 0 0 0 999px rgba(255, 255, 255, 0.025);
 }
 
 /* Curved shelf: covers snap to the centre, and the curve hook turns each one by its distance from it.
