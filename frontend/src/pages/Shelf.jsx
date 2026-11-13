@@ -121,7 +121,7 @@ export default function Shelf() {
                 key={value}
                 className={`chip${statusFilter === value ? ' chip-active' : ''}`}
                 aria-pressed={statusFilter === value}
-                onClick={() => setParams(value === 'all' ? {} : { status: value })}
+                onClick={() => setParams(value === 'all' ? {} : { status: value }, { preventScrollReset: true })}
               >
                 {label} <span className="chip-count">{count}</span>
               </button>

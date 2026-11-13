@@ -9,6 +9,19 @@ import { useLibrary } from '../library/LibraryContext'
 
 const CATEGORIES = [['all', 'All'], ...MEDIA_ORDER.map((type) => [type, MEDIA_TYPES[type].plural])]
 
+// Recent results, kept in memory until the app is closed or refreshed. Going back to Discover
+// shows them straight away instead of searching again, so the page is already full-length and
+// the scroll position can be restored. Only complete answers are kept (no unreachable sources).
+const MAX_CACHED = 20
+const resultCache = new Map()
+const cacheKey = (query, category) => `${query}|${category}`
+
+function remember(key, data) {
+  resultCache.delete(key) // re-adding moves it to the end, so the oldest search is first
+  resultCache.set(key, data)
+  if (resultCache.size > MAX_CACHED) resultCache.delete(resultCache.keys().next().value)
+}
+
 export default function Discover() {
   // The search lives in the URL (?q=...&category=...), so results survive a refresh,
   // the back button works, and a search can be shared as a link.
@@ -17,9 +30,10 @@ export default function Discover() {
   const category = params.get('category') || 'all'
 
   const [draft, setDraft] = useState(query)
-  const [results, setResults] = useState(null)
+  const cached = resultCache.get(cacheKey(query, category))
+  const [results, setResults] = useState(cached?.results ?? null)
   const [unavailable, setUnavailable] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(!cached)
   const [error, setError] = useState(null)
   const [attempt, setAttempt] = useState(0)
   const { entryFor } = useLibrary()
@@ -28,6 +42,16 @@ export default function Discover() {
   useEffect(() => setDraft(query), [query])
 
   useEffect(() => {
+    const key = cacheKey(query, category)
+    const saved = attempt === 0 && resultCache.get(key) // "Try again" always asks the server
+    if (saved) {
+      setResults(saved.results)
+      setUnavailable([])
+      setError(null)
+      setLoading(false)
+      return undefined
+    }
+
     let cancelled = false // ignore answers to old searches if the user has already searched again
     setLoading(true)
     setError(null)
@@ -37,6 +61,7 @@ export default function Discover() {
         if (cancelled) return
         setResults(data.results)
         setUnavailable(data.unavailable_sources)
+        if (data.unavailable_sources.length === 0) remember(key, { results: data.results })
       })
       .catch((err) => !cancelled && setError(err.message))
       .finally(() => !cancelled && setLoading(false))
@@ -45,10 +70,11 @@ export default function Discover() {
     }
   }, [query, category, attempt])
 
-  function update(changes) {
+  // `options` go to React Router, e.g. { preventScrollReset: true } to stay where you are.
+  function update(changes, options) {
     const next = { q: query, category, ...changes }
     const cleaned = Object.fromEntries(Object.entries(next).filter(([key, value]) => value && !(key === 'category' && value === 'all')))
-    setParams(cleaned)
+    setParams(cleaned, options)
   }
 
   function submit(event) {
@@ -101,7 +127,7 @@ export default function Discover() {
             key={value}
             className={`chip${category === value ? ' chip-active' : ''}`}
             aria-pressed={category === value}
-            onClick={() => update({ category: value })}
+            onClick={() => update({ category: value }, { preventScrollReset: true })}
           >
             {label}
           </button>
