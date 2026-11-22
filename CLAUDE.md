@@ -45,7 +45,7 @@ How the work is organised (Scrum, the board, the Definition of Done) is in `docs
 See `docs/architecture.md` for the full description and diagrams, and `docs/decisions/` for why each major choice was made.
 
 ```
-React app (frontend/, GitHub Pages, installable PWA)
+React app (frontend/, Vercel, installable PWA)
    │  JSON over HTTPS, Clerk session token in the Authorization header
    ▼
 FastAPI (backend/, Render)  ──►  AniList GraphQL API, Open Library API
@@ -60,7 +60,7 @@ PostgreSQL in production (Neon), SQLite locally and in tests
 
 ## MVP scope (from the product plan)
 
-**Status (November 7):** the MVP is live at https://obich1.github.io/WagaShelf/ (GitHub Pages, Render, Neon, Clerk). Current work is tracked on the GitHub Projects board; the current sprint is in `docs/sprints/`.
+**Status (November 20):** the MVP is live at https://waga-shelf.vercel.app/ (Vercel, Render, Neon, Clerk). It moved from GitHub Pages on November 20 (ADR 010). Current work is tracked on the GitHub Projects board; the current sprint is in `docs/sprints/`.
 
 **In:** universal search with category filters (anime, manga, manhwa, manhua, light novels via AniList; books via Open Library); title detail pages with official links where available; add to shelf with optional status; shelves per media type that appear dynamically, with status filters; editing status, progress, rating and private notes; removing titles; Home dashboard; sign-in with Clerk; dark, cozy UI; installable PWA.
 

@@ -18,6 +18,6 @@ services:
       - key: CLERK_ISSUER
         sync: false
       - key: CLERK_AUTHORIZED_PARTIES
-        value: https://obich1.github.io
+        value: https://waga-shelf.vercel.app
       - key: FRONTEND_ORIGINS
-        value: https://obich1.github.io
+        value: https://waga-shelf.vercel.app

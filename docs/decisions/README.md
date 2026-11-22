@@ -19,3 +19,4 @@ they explain *why* WagaShelf is built the way it is, which the code alone can't 
 | [005](005-react-frontend-in-the-mvp.md) | Rebuild the frontend in React as part of the MVP | Accepted |
 | [006](006-focused-launch-categories.md) | Focus the launch on anime, manga and related media | Accepted |
 | [007](007-data-router-for-scroll-restoration.md) | A data router, so Back returns to the same scroll position | Accepted |
+| [010](010-host-the-frontend-on-vercel.md) | Host the frontend on Vercel | Accepted |

@@ -22,9 +22,9 @@ const appearance = {
 }
 
 // Where to go after signing out: WagaShelf's home page, as a full address.
-// Clerk resolves relative addresses like "./" from the site's root (https://obich1.github.io/),
-// not from the app's folder (/WagaShelf/), which led to a 404 page. A full address leaves nothing
-// to resolve, and working it out from the current page means it's right on any host.
+// Clerk resolves relative addresses like "./" from the site's root, not from the app's folder.
+// On GitHub Pages, where the app lived in /WagaShelf/, that led to a 404 page. A full address
+// leaves nothing to resolve, and working it out from the current page means it's right on any host.
 const homeUrl = new URL('./', window.location.href).href
 
 export function AuthProvider({ children }) {

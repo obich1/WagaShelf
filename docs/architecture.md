@@ -28,7 +28,7 @@ flowchart TB
     user["👤 User"]
 
     subgraph waga["WagaShelf"]
-        spa["Web app (PWA)<br/>React + Vite<br/>Hosted on GitHub Pages"]
+        spa["Web app (PWA)<br/>React + Vite<br/>Hosted on Vercel"]
         api["API<br/>Python, FastAPI<br/>Hosted on Render"]
         db[("Database<br/>PostgreSQL (Neon) in production<br/>SQLite locally and in tests")]
     end
@@ -145,7 +145,7 @@ src/
 | **SQLModel** | Tables and validation models in one style; works with SQLite and PostgreSQL. | A new library instead of raw SQL. |
 | **PostgreSQL in production, SQLite in tests** | Hosted PostgreSQL keeps data safe across restarts; SQLite makes tests fast and isolated. | Small differences between the two (time zones, foreign keys) need care. |
 | **Constraints in the database** (unique, foreign keys) | Rules hold even if application code has a bug. | Errors must be translated into friendly API responses. |
-| **React + React Router with hash URLs** | Several pages; GitHub Pages only serves real files, so `#/` URLs avoid 404s on refresh. | URLs contain `#`. Alternative: a host with rewrite rules. |
+| **React + React Router with hash URLs** | Several pages; chosen on GitHub Pages, which only serves real files, so `#/` URLs avoid 404s on refresh. | URLs contain `#`. Vercel supports rewrite rules, so clean URLs are now possible (a later change). |
 | **One shared library state (React context)** | Every page sees the same data; changes appear everywhere immediately. | The whole library loads at sign-in (fine at personal-library sizes). |
 | **PWA with a network-first service worker** | Installable on phones; always shows the newest version when online. | No full offline mode (deferred). |
-| **GitHub Pages + Render + Neon** | Free tiers; each part deploys independently. | Render's free tier sleeps when idle, so the first request after a while is slow. |
+| **Vercel + Render + Neon** (frontend moved from GitHub Pages, ADR 010) | Free tiers; each part deploys independently; Vercel builds every pull request as a preview. | Render's free tier sleeps when idle, so the first request after a while is slow. Vercel's free plan is for non-commercial use. |

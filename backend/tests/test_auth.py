@@ -14,7 +14,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 import auth
 
 ISSUER = "https://example-app.clerk.accounts.dev"
-FRONTEND = "https://obich1.github.io"
+FRONTEND = "https://waga-shelf.vercel.app"
 
 
 @pytest.fixture(scope="module")

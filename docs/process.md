@@ -66,7 +66,7 @@ Issue → branch → change → test locally → push → pull request → CI �
 5. **Push and open a pull request** using the PR template, with `Closes #<issue>`.
 6. **CI** runs the backend tests and the frontend lint and build. `main` is protected: changes
    only arrive through pull requests with passing CI.
-7. **Merge.** The frontend deploys to GitHub Pages automatically; Render redeploys the backend.
+7. **Merge.** Vercel deploys the frontend automatically; Render redeploys the backend.
 8. **Check the live site.** The issue closes and its card moves to **Done**.
 
 ## Definition of Done
