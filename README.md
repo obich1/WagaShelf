@@ -7,7 +7,7 @@ People watch and read across many platforms, so their lists end up scattered or 
 WagaShelf gives them one place to save titles, optionally track progress, keep private notes,
 and find where to watch or read officially.
 
-**Live app:** https://obich1.github.io/WagaShelf/
+**Live app:** https://waga-shelf.vercel.app/
 
 ![WagaShelf home dashboard](docs/screenshots/home.png)
 
@@ -35,7 +35,7 @@ and find where to watch or read officially.
 
 | Part | Technology |
 |---|---|
-| Frontend | React, Vite, React Router, Clerk; hosted on GitHub Pages; installable PWA |
+| Frontend | React, Vite, React Router, Clerk; hosted on Vercel; installable PWA |
 | Backend | Python, FastAPI, SQLModel (Pydantic + SQLAlchemy), PyJWT; hosted on Render |
 | Database | PostgreSQL (Neon) in production, SQLite locally and in tests |
 | Data sources | AniList GraphQL API, Open Library API |
@@ -45,7 +45,7 @@ and find where to watch or read officially.
 
 ```mermaid
 flowchart LR
-    user["👤 User"] --> spa["React app (PWA)<br/>GitHub Pages"]
+    user["👤 User"] --> spa["React app (PWA)<br/>Vercel"]
     spa -->|"sign-in"| clerk["Clerk"]
     spa -->|"JSON + session token"| api["FastAPI<br/>Render"]
     api --> db[("PostgreSQL<br/>Neon")]

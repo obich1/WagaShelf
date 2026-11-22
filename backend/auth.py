@@ -21,7 +21,7 @@ from models import User
 
 # Your Clerk instance's Frontend API URL, e.g. https://example-name-12.clerk.accounts.dev
 CLERK_ISSUER = os.getenv("CLERK_ISSUER", "").rstrip("/")
-# Websites allowed to use the tokens (the "azp" claim), e.g. https://obich1.github.io
+# Websites allowed to use the tokens (the "azp" claim), e.g. https://waga-shelf.vercel.app
 AUTHORIZED_PARTIES = [
     party.strip().rstrip("/")
     for party in os.getenv("CLERK_AUTHORIZED_PARTIES", "").split(",")
