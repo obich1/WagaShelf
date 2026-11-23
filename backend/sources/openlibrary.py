@@ -9,7 +9,10 @@ from sources.errors import SourceUnavailable, TitleNotFound
 
 BASE_URL = "https://openlibrary.org"
 COVER_URL = "https://covers.openlibrary.org/b/id/{cover_id}-L.jpg"
-TIMEOUT_SECONDS = 10
+# How long to wait for Open Library (#38): up to 2 seconds to connect, then up to 6 seconds for each
+# wait after that (httpx timeouts apply per step, not to the whole request). Open Library is often
+# slower than AniList, typically 1 to 3 seconds, so it gets a little longer.
+TIMEOUT = httpx.Timeout(6.0, connect=2.0)
 SEARCH_FIELDS = "key,title,author_name,first_publish_year,cover_i,number_of_pages_median,subject"
 WORK_ID_PATTERN = re.compile(r"^OL\d+W$")  # Open Library work ids look like OL893414W
 MAX_GENRES = 6
@@ -18,7 +21,7 @@ MAX_GENRES = 6
 def _get(path: str, params: dict | None = None) -> dict:
     try:
         response = httpx.get(
-            f"{BASE_URL}{path}", params=params, timeout=TIMEOUT_SECONDS, follow_redirects=True
+            f"{BASE_URL}{path}", params=params, timeout=TIMEOUT, follow_redirects=True
         )
     except httpx.HTTPError as error:
         raise SourceUnavailable(f"Couldn't reach Open Library: {error}") from error

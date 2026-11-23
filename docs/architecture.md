@@ -139,7 +139,7 @@ src/
 |---|---|---|
 | **Shared catalogue + personal entries** (`titles` and `library_entries`) | Matches the product principle: facts about a title are shared, each user's relationship to it is private. No duplicated title data. | More joins than one flat table. |
 | **Backend calls AniList and Open Library** | One common title format; the frontend doesn't know each source's API; sources can be added without frontend changes. | An extra network hop; more backend code. |
-| **Partial results when a source is down** | One outage shouldn't break search. Stored titles are used if a source is down when viewing them. | Responses must say which source was unavailable. |
+| **Partial results when a source is down** | One outage shouldn't break search. Each source has a short timeout (AniList 4 s, Open Library 6 s, 2 s to connect), so a slow source counts as unavailable instead of holding up the page. Stored titles are used if a source is down when viewing them. | Responses must say which source was unavailable. A source that is merely slow on one request is reported as unavailable. |
 | **Clerk for sign-in** | Security-critical and not what makes WagaShelf different; includes sign-in UI, email verification and password reset. | Depends on an outside service; production needs a custom domain. Alternative: own password hashing and JWTs. |
 | **Token verification with Clerk's public keys (JWKS)** | The API checks tokens itself, without calling Clerk on every request. | Keys are cached; a key rotation is picked up on the next unknown key id. |
 | **SQLModel** | Tables and validation models in one style; works with SQLite and PostgreSQL. | A new library instead of raw SQL. |

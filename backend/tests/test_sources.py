@@ -4,7 +4,11 @@ The sample data below copies the shape of real API responses, so these tests run
 without a network connection.
 """
 
+import httpx
+import pytest
+
 from sources import anilist, openlibrary
+from sources.errors import SourceUnavailable
 
 ANILIST_MEDIA = {
     "id": 105398,
@@ -116,3 +120,42 @@ def test_openlibrary_description_can_be_text_or_object():
     assert openlibrary.description_of({"description": "Plain text"}) == "Plain text"
     assert openlibrary.description_of({"description": {"type": "/type/text", "value": "Wrapped"}}) == "Wrapped"
     assert openlibrary.description_of({}) is None
+
+
+# Timeouts (#38). httpx is replaced with a fake that times out, so nothing touches the network.
+
+def raise_timeout(*args, **kwargs):
+    raise httpx.ReadTimeout("the source took too long")
+
+
+def test_anilist_timeout_means_unavailable(monkeypatch):
+    monkeypatch.setattr(anilist.httpx, "post", raise_timeout)
+
+    with pytest.raises(SourceUnavailable):
+        anilist.search("solo leveling", None)
+
+
+def test_openlibrary_timeout_means_unavailable(monkeypatch):
+    monkeypatch.setattr(openlibrary.httpx, "get", raise_timeout)
+
+    with pytest.raises(SourceUnavailable):
+        openlibrary.search("dune")
+
+
+def test_each_source_uses_its_own_timeout(monkeypatch):
+    used = {}
+
+    def remember_timeout(name):
+        def fake_request(*args, timeout=None, **kwargs):
+            used[name] = timeout
+            raise httpx.ConnectTimeout("stop here")
+        return fake_request
+
+    monkeypatch.setattr(anilist.httpx, "post", remember_timeout("anilist"))
+    monkeypatch.setattr(openlibrary.httpx, "get", remember_timeout("openlibrary"))
+    for search in (lambda: anilist.search("x", None), lambda: openlibrary.search("x")):
+        with pytest.raises(SourceUnavailable):
+            search()
+
+    assert used["anilist"] == httpx.Timeout(4.0, connect=2.0)
+    assert used["openlibrary"] == httpx.Timeout(6.0, connect=2.0)
