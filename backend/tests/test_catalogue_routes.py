@@ -4,6 +4,7 @@ The external sources are replaced with fakes (monkeypatch), so these tests never
 AniList or Open Library and always give the same results.
 """
 
+import httpx
 import pytest
 from sqlmodel import select
 
@@ -78,6 +79,21 @@ def test_search_returns_partial_results_when_one_source_is_down(client, fake_sou
     assert response.status_code == 200
     assert len(response.json()["results"]) == 1
     assert response.json()["unavailable_sources"] == ["Open Library"]
+
+
+def test_search_still_works_when_anilist_times_out(client, monkeypatch):
+    # The real AniList code runs, but its request times out (#38); Open Library answers.
+    def time_out(*args, **kwargs):
+        raise httpx.ReadTimeout("AniList took too long")
+
+    monkeypatch.setattr(anilist.httpx, "post", time_out)
+    monkeypatch.setattr(openlibrary, "search", lambda query: [book()])
+
+    response = client.get("/search", params={"q": "dune"})
+
+    assert response.status_code == 200
+    assert [r["title"] for r in response.json()["results"]] == ["Dune"]
+    assert response.json()["unavailable_sources"] == ["AniList"]
 
 
 def test_search_fails_when_every_source_is_down(client, monkeypatch):

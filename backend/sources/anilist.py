@@ -9,7 +9,11 @@ from models import CatalogueItem
 from sources.errors import SourceUnavailable, TitleNotFound
 
 URL = "https://graphql.anilist.co"
-TIMEOUT_SECONDS = 10
+# How long to wait for AniList (#38). httpx applies a timeout to each step of a request, not to the
+# whole request: up to 2 seconds to connect, then up to 4 seconds for each wait after that.
+# AniList usually answers in under a second, so a slow AniList fails fast and the other sources'
+# results still appear, with the "couldn't be reached" notice.
+TIMEOUT = httpx.Timeout(4.0, connect=2.0)
 
 # The fields WagaShelf needs, written once and reused by both queries below.
 MEDIA_FIELDS = """
@@ -78,7 +82,7 @@ def _post(query: str, variables: dict) -> dict:
     """Send a GraphQL query to AniList and return its "data" part."""
     try:
         response = httpx.post(
-            URL, json={"query": query, "variables": variables}, timeout=TIMEOUT_SECONDS
+            URL, json={"query": query, "variables": variables}, timeout=TIMEOUT
         )
     except httpx.HTTPError as error:
         raise SourceUnavailable(f"Couldn't reach AniList: {error}") from error
