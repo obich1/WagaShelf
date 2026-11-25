@@ -6,25 +6,31 @@ Guidance for Claude Code when working in this repository.
 
 I'm Obi, a second-year Computer Science student at UPEI. WagaShelf is my portfolio project, and I'm using it to learn frontend, backend, APIs, databases, React and system architecture.
 
-**Goal:** a finished, shipped MVP built from my product plan (`docs/product-planning.md`), for a meeting with a local tech leader on **November 16, 2026**. After the build, we walk through every architecture decision and then the codebase together, so I can explain all of it.
 
-## Workflow (updated November 7, 2026)
+## Workflow 
 
 How the work is organised (Scrum, the board, the Definition of Done) is in `docs/process.md`.
 
-- **Obi creates the issues and branches**, and **commits, pushes and merges** everything. `main`
-  is protected: changes only arrive through pull requests with passing CI.
-- **Claude never commits, pushes or merges.** For each item, Claude:
-  1. investigates the relevant code and finds the cause or the constraints;
-  2. proposes options, explains why each would work, and recommends one;
-  3. waits for Obi's approval and branch name;
-  4. gives the exact change, explained (for many files, as a patch file for `git apply`);
-  5. says how to test it locally before pushing.
-- One item per branch. Bugs come before design changes.
+- **Obi creates the issues** and decides priorities. `main` is protected: changes only arrive
+  through pull requests with passing CI.
+- **Claude may create branches, commit, push, open pull requests and merge them**, following
+  these rules:
+  1. Investigate first, then propose options with a recommendation, and wait for Obi's approval
+     before writing code.
+  2. One item per branch, named `<issue number>-<short-description>`. Bugs before design changes.
+  3. Small, clear commits. The pull request uses the template, links the issue (`Closes #N`) and
+     explains what changed and why.
+  4. **Merge only when CI passes and Obi has said to merge** ("merge it"). Never push directly
+     to `main`, never force-push, never rewrite shared history.
+  5. After merging, check the live site (Vercel and Render deploy automatically) and report back.
+- Explain every change at a learning level: what it does, why, and the alternatives. Obi reviews
+  each pull request before saying "merge it".
 - Significant decisions get a decision record in `docs/decisions/`.
 - Docs affected by a change are updated in the same pull request.
-- **Never commit secrets** (Clerk secret key, database URL). They live in `.env` files (ignored by Git) and in the hosting dashboards.
-- Prefer simple, maintainable solutions. Before adding a new library, explain why it's needed and what the alternatives are.
+- **Never commit secrets** (Clerk secret key, database URL). They live in `.env` files (ignored by
+  Git) and in the hosting dashboards.
+- Prefer simple, maintainable solutions. Before adding a new library, explain why it's needed and
+  what the alternatives are.
 
 ## How I learn best
 
