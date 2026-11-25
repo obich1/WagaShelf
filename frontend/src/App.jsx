@@ -3,6 +3,7 @@ import { NavLink, Route, Routes, ScrollRestoration } from 'react-router-dom'
 
 import { AccountMenu, SignInLink, signInEnabled, useSession } from './auth'
 import { EmptyState } from './components/common'
+import ThemeMenu from './components/ThemeMenu'
 import Discover from './pages/Discover'
 import Home from './pages/Home'
 import Shelf from './pages/Shelf'
@@ -29,6 +30,7 @@ function Header() {
         </NavLink>
       </nav>
       <div className="account">
+        <ThemeMenu />
         {isLoaded && (isSignedIn ? <AccountMenu /> : <SignInLink className="button button-small">Sign in</SignInLink>)}
       </div>
     </header>
