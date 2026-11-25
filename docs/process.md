@@ -16,7 +16,7 @@ next. Documentation is kept to what someone actually reads (see [Documentation](
 | Scrum role | WagaShelf |
 |---|---|
 | **Product Owner** | Obi: decides what is built and in what order, and accepts finished work |
-| **Developers** | Obi, with Claude as an assistant (investigates, proposes, explains and drafts changes) |
+| **Developers** | Obi, with Claude: investigates, proposes, explains, and implements approved changes through pull requests |
 | **Stakeholders** | WagaShelf's users (friends, people at Night Shift) and experienced mentors |
 
 ## The weekly sprint
