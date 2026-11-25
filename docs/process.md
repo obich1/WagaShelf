@@ -62,9 +62,9 @@ Issue → branch → change → test locally → push → pull request → CI �
 2. **Branch** from `main`, named `<issue number>-<short-description>` (e.g. `24-fix-navigation-covering-screen-on-pwa`).
 3. **Investigate first**, then propose a plan and explain the trade-offs before changing code.
 4. **Test locally** with both servers running, and click through what changed. Then run
-   `pytest -v` (backend) and `npm run lint` and `npm run build` (frontend).
+   `pytest -v` (backend) and `npm run lint`, `npm test` and `npm run build` (frontend).
 5. **Push and open a pull request** using the PR template, with `Closes #<issue>`.
-6. **CI** runs the backend tests and the frontend lint and build. `main` is protected: changes
+6. **CI** runs the backend tests and the frontend lint, render test and build. `main` is protected: changes
    only arrive through pull requests with passing CI.
 7. **Merge.** Vercel deploys the frontend automatically; Render redeploys the backend.
 8. **Check the live site.** The issue closes and its card moves to **Done**.
