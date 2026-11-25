@@ -1,29 +1,9 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { RouterProvider, createHashRouter } from 'react-router-dom'
 
-import App from './App'
-import { AuthProvider } from './auth'
 import './index.css'
-import { LibraryProvider } from './library/LibraryContext'
+import Root from './Root'
 
-// The router uses "hash" URLs: the page lives in the part after "#", e.g. /#/discover.
-// They started on GitHub Pages, which only serves real files, so they avoided 404 errors when
-// refreshing a page. Vercel could serve clean URLs (/discover) with a rewrite rule; that's a
-// separate change for later (see docs/decisions/010-host-the-frontend-on-vercel.md).
-// createHashRouter (a "data router") instead of <HashRouter> so that <ScrollRestoration> in App works.
-// Every path goes to App, which picks the page with its own <Routes>.
-const router = createHashRouter([{ path: '*', element: <App /> }])
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <AuthProvider>
-      <LibraryProvider>
-        <RouterProvider router={router} />
-      </LibraryProvider>
-    </AuthProvider>
-  </StrictMode>,
-)
+createRoot(document.getElementById('root')).render(<Root />)
 
 // Register the service worker, which makes WagaShelf installable as an app (PWA).
 // Only in the built app: during development it would cache files you're still changing.

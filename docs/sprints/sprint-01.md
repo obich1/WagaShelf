@@ -22,7 +22,7 @@ architecture.The sprint backlog is kept small to fit.
 |No "X" to clear Search bar on PWA| Bug| Done |
 | Rename "Novels" to "Light novels" | Design change | Done |
 | Shorter timeouts for external catalogue requests | Design change | Done (#38): AniList 4 s, Open Library 6 s, 2 s to connect |
-| *Stretch:* render test in CI | Technical | Would have caught the blank-site bug |
+| *Stretch:* render test in CI | Technical | Done (#41): Vitest renders the app; CI runs it |
 
 ## Sprint review (Saturday, November 14)
 

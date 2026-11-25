@@ -39,7 +39,7 @@ and find where to watch or read officially.
 | Backend | Python, FastAPI, SQLModel (Pydantic + SQLAlchemy), PyJWT; hosted on Render |
 | Database | PostgreSQL (Neon) in production, SQLite locally and in tests |
 | Data sources | AniList GraphQL API, Open Library API |
-| Quality | pytest test suite, GitHub Actions CI on every push and pull request |
+| Quality | pytest test suite (backend), Vitest render test (frontend), GitHub Actions CI on every push and pull request |
 
 ## Architecture
 
