@@ -65,7 +65,19 @@ The live setup: React app on **Vercel**, API on **Render**, database on **Neon**
 3. When it's live, open `https://<your-service>.onrender.com/health`. It should show `{"status":"ok"}`.
 
 Render's start command runs `alembic upgrade head` before the API starts, so each deploy brings
-the Neon database up to date. **One-time step when Alembic was introduced (ADR 012):** the Neon
+the Neon database up to date. Two things must be true for that to work, and neither is checked
+by Git:
+
+- **The Start Command in the Render dashboard must match `render.yaml`**
+  (`alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port $PORT`). `render.yaml` only
+  sets the command when the service is created from the Blueprint; later edits to the file
+  don't change a service that already exists. Check **Settings → Start Command** after changing it.
+- **`DATABASE_URL` in Render must be the current Neon string.** It is a value you paste into the
+  dashboard, so it does not change when Neon's string changes (for example after resetting the
+  password or switching branch). Migrations can't fix it: they run against whatever database the
+  variable points to, so a stale value migrates the *old* database and leaves the live one behind.
+
+**One-time step when Alembic was introduced (ADR 012):** the Neon
 database already had its tables, so it must be told it is at the baseline version *before* the first
 deploy that includes Alembic. Otherwise the baseline migration would try to create tables that exist.
 
@@ -90,8 +102,10 @@ around a minute. Open the app a minute before a demo.
 4. Deploy. The app is published at `https://waga-shelf.vercel.app/`, and every merge into `main` deploys again
    automatically.
 5. **Preview deployments:** Vercel also builds each pull request at its own address. They are
-   useful for checking how a change looks, but sign-in doesn't work there, because those
-   addresses aren't in the API's `FRONTEND_ORIGINS` or `CLERK_AUTHORIZED_PARTIES`.
+   useful for checking how a change looks, but they can't load any data: the API refuses requests
+   from addresses that aren't in its `FRONTEND_ORIGINS` (and sign-in needs `CLERK_AUTHORIZED_PARTIES`),
+   so a preview shows "Can't reach WagaShelf". To test a change with real data, merge it and check
+   the live site, or add that one preview address to `FRONTEND_ORIGINS` temporarily.
 6. **Link previews:** the `og:` tags in `frontend/index.html` give LinkedIn, Discord and others
    a title, description and image (`frontend/public/og-image.png`, 1200 × 630). `og:url` and
    `og:image` are full addresses, so **update them if the site moves**. Sites keep a preview for
@@ -112,6 +126,20 @@ on the new address:
 In the Clerk dashboard, make sure `https://waga-shelf.vercel.app` is allowed for your instance.
 Clerk **development** instances show a small "development mode" badge and have usage limits;
 a **production** instance requires a domain you own. A development instance is fine for the MVP.
+
+## When the live site stops working
+
+| What you see | Likely cause | Check |
+|---|---|---|
+| "Can't reach WagaShelf" on the live site, and the browser console shows a **CORS error** together with `500` | The API crashed on that request. A crashed (500) response carries no CORS headers, so the browser reports it as a network failure, not as a server error. | Render → **Logs** for the traceback. If it mentions a missing table or column, the database is behind: see the next rows. |
+| Same, right after a deploy that changed the database | The migration didn't run against the live database | Render → **Events**: did the deploy succeed? Is the Start Command correct (above)? From `backend`, run `alembic current` with the Neon string: it should show the newest revision, not an older one. |
+| The migration "succeeded" but the live data is still missing or the app still fails | Render's `DATABASE_URL` points at a different (older) database than the one you migrated | Compare Render's `DATABASE_URL` with the Neon dashboard's current connection string. |
+| "Can't reach WagaShelf" only on a Vercel preview | The preview address isn't in `FRONTEND_ORIGINS` | Expected: see "Preview deployments" above. |
+| Slow first load, then it works | The free tier woke up from sleep | Wait about a minute. |
+
+To tell a CORS problem from a crash, open the browser's **Network** tab, click the failed request,
+and look at its status: `500` means the API crashed (read Render's logs); a request that shows
+no status at all, with a CORS message in the console, usually means the origin isn't allowed.
 
 ## Configuration reference
 
