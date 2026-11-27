@@ -2,7 +2,7 @@
 // A round "+" on the cover opens a small status picker over it. Once the title is saved, the "+"
 // goes away and its status ("✓ Watching") shows under the card instead; tapping that opens the same
 // picker to change the status or remove the title. Every change can be undone from the toast.
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { SignInLink, useSession } from '../auth'
 import { MEDIA_TYPES, statusLabel } from '../lib/media'
@@ -31,6 +31,7 @@ export default function QuickAdd({ title }) {
   const [bursts, setBursts] = useState(0) // changing it restarts the burst animation
   const root = useRef(null)
   const button = useRef(null)
+  const picker = useRef(null)
 
   const entry = library.entryFor(title.source, title.source_id)
   const shelf = MEDIA_TYPES[title.media_type]?.plural ?? 'your shelf'
@@ -55,6 +56,30 @@ export default function QuickAdd({ title }) {
       document.removeEventListener('keydown', onKeyDown)
       document.removeEventListener('click', onClickOutside)
     }
+  }, [open])
+
+  // The picker is always in the page (hidden until opened) and is sized from the cover's real box,
+  // not worked out separately from the card's width. Whatever the browser draws for the cover, the
+  // picker matches it exactly. useLayoutEffect runs before the screen is painted, so it never shows
+  // at the wrong size.
+  useLayoutEffect(() => {
+    if (!open) return undefined
+    const fit = () => {
+      const card = root.current?.parentElement
+      const cover = card?.querySelector('.cover')
+      if (!cover || !picker.current) return
+      const a = card.getBoundingClientRect()
+      const c = cover.getBoundingClientRect()
+      Object.assign(picker.current.style, {
+        top: `${c.top - a.top}px`,
+        left: `${c.left - a.left}px`,
+        width: `${c.width}px`,
+        height: `${c.height}px`,
+      })
+    }
+    fit()
+    window.addEventListener('resize', fit)
+    return () => window.removeEventListener('resize', fit)
   }, [open])
 
   if (!isLoaded) return null
@@ -166,38 +191,36 @@ export default function QuickAdd({ title }) {
         </span>
       )}
 
-      {open && (
-        <div className="quick-picker" role="group" aria-label={`Add ${title.title} to your shelf`}>
-          <p>{entry ? 'On your shelf' : `Add to ${shelf}`}</p>
-          {QUICK_STATUSES.map((status) => (
-            <button
-              key={status}
-              type="button"
-              disabled={busy}
-              className={entry?.status === status ? 'current' : ''}
-              aria-pressed={entry ? entry.status === status : undefined}
-              onClick={() => save(status)}
-            >
-              {statusLabel(status, title.media_type)}
-            </button>
-          ))}
-          {!entry && (
-            <button type="button" disabled={busy} onClick={() => save(null)}>
-              Just save
+      <div className="quick-picker" ref={picker} hidden={!open} role="group" aria-label={`Add ${title.title} to your shelf`}>
+        <p>{entry ? 'On your shelf' : `Add to ${shelf}`}</p>
+        {QUICK_STATUSES.map((status) => (
+          <button
+            key={status}
+            type="button"
+            disabled={busy}
+            className={entry?.status === status ? 'current' : ''}
+            aria-pressed={entry ? entry.status === status : undefined}
+            onClick={() => save(status)}
+          >
+            {statusLabel(status, title.media_type)}
+          </button>
+        ))}
+        {!entry && (
+          <button type="button" disabled={busy} onClick={() => save(null)}>
+            Just save
+          </button>
+        )}
+        <div className="quick-picker-footer">
+          {entry && (
+            <button type="button" className="quick-remove" disabled={busy} onClick={remove}>
+              Remove
             </button>
           )}
-          <div className="quick-picker-footer">
-            {entry && (
-              <button type="button" className="quick-remove" disabled={busy} onClick={remove}>
-                Remove
-              </button>
-            )}
-            <button type="button" className="quick-cancel" onClick={close}>
-              Cancel
-            </button>
-          </div>
+          <button type="button" className="quick-cancel" onClick={close}>
+            Cancel
+          </button>
         </div>
-      )}
+      </div>
     </div>
   )
 }
