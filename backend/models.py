@@ -26,6 +26,9 @@ class User(SQLModel, table=True):
     __tablename__ = "users"
 
     id: str = Field(primary_key=True)
+    # A copy of the user's Clerk username (Clerk is the source of truth; see auth.py). Optional,
+    # because accounts made before usernames existed don't have one. Unique when present.
+    username: str | None = Field(default=None, unique=True, index=True)
     created_at: datetime = timestamp_field()
 
 

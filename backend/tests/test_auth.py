@@ -101,3 +101,51 @@ def test_server_without_clerk_config_says_so(client, monkeypatch, private_key):
     monkeypatch.setattr(auth, "CLERK_ISSUER", "")
 
     assert get_library(client, make_token(private_key)).status_code == 503
+
+
+# --- Usernames: users.username is a copy of the "username" claim in Clerk's session token ---
+
+
+def username_of(session, user_id):
+    from models import User
+
+    session.expire_all()
+    return session.get(User, user_id).username
+
+
+def test_username_is_saved_from_the_token(client, session, private_key):
+    get_library(client, make_token(private_key, username="obi"))
+
+    assert username_of(session, "user_123") == "obi"
+
+
+def test_username_follows_a_change_in_clerk(client, session, private_key):
+    get_library(client, make_token(private_key, username="obi"))
+    get_library(client, make_token(private_key, username="obi_reads"))
+
+    assert username_of(session, "user_123") == "obi_reads"
+
+
+def test_token_without_a_username_claim_leaves_the_saved_one_alone(client, session, private_key):
+    get_library(client, make_token(private_key, username="obi"))
+    get_library(client, make_token(private_key))  # e.g. the token isn't customised yet
+
+    assert username_of(session, "user_123") == "obi"
+
+
+def test_empty_username_claim_clears_it(client, session, private_key):
+    get_library(client, make_token(private_key, username="obi"))
+    get_library(client, make_token(private_key, username=""))
+
+    assert username_of(session, "user_123") is None
+
+
+def test_username_taken_over_from_a_stale_copy(client, session, private_key):
+    # user_a renamed in Clerk but hasn't made a request since, so we still hold "obi" for them.
+    get_library(client, make_token(private_key, sub="user_a", username="obi"))
+    # user_b can legitimately take "obi" in Clerk now.
+    response = get_library(client, make_token(private_key, sub="user_b", username="obi"))
+
+    assert response.status_code == 200
+    assert username_of(session, "user_b") == "obi"
+    assert username_of(session, "user_a") is None
