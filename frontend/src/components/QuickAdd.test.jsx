@@ -126,6 +126,20 @@ describe('quick add', () => {
     expect(screen.queryByRole('group')).toBeNull()
   })
 
+  it('stays open while the page is touched or scrolled, and closes on a tap elsewhere', () => {
+    renderQuickAdd()
+    fireEvent.click(screen.getByRole('button', { name: 'Quick add Frieren' }))
+
+    // A finger going down (the start of a scroll) is not a tap, so the picker stays.
+    fireEvent.pointerDown(document.body)
+    fireEvent.scroll(window)
+    expect(screen.getByRole('group')).toBeTruthy()
+
+    // A real tap (which ends in a click) elsewhere closes it.
+    fireEvent.click(document.body)
+    expect(screen.queryByRole('group')).toBeNull()
+  })
+
   it('offers sign-in instead of the picker when signed out', () => {
     session.isSignedIn = false
     renderQuickAdd()
