@@ -442,6 +442,29 @@ label {
   border-radius: 999px;
 }
 
+/* The search on My Shelves and on a shelf: the same box as Discover's, with room below it. */
+.shelf-search {
+  margin-bottom: 1rem;
+}
+
+.empty-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.empty-inline p {
+  margin: 0;
+}
+
+/* Safari draws its own clear button inside a search box. We draw ours, so hide that one (it showed twice). */
+.search-field input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
 /* Holds the search box and its clear button, so the button can sit inside the box. */
 .search-field {
   position: relative;

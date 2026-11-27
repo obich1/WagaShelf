@@ -22,7 +22,7 @@ and find where to watch or read officially.
 - **Title pages** with description, genres, release info and **official links** (e.g.
   Crunchyroll, KakaoPage, Tapas)
 - **Saving comes first:** add a title in one click; status and progress are optional
-- **Shelves that build themselves:** one per media type you've saved, filterable by status, with
+- **Shelves that build themselves:** one per media type you've saved, searchable by title or author and filterable by status, with
   quick status changes and +1 progress
 - **Media-aware tracking:** episodes for anime, chapters for manga and novels, pages for books;
   "Watching" vs "Reading" wording
