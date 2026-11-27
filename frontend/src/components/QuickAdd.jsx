@@ -192,34 +192,34 @@ export default function QuickAdd({ title }) {
       )}
 
       <div className="quick-picker" ref={picker} hidden={!open} role="group" aria-label={`Add ${title.title} to your shelf`}>
-          <p>{entry ? 'On your shelf' : `Add to ${shelf}`}</p>
-          {QUICK_STATUSES.map((status) => (
-            <button
-              key={status}
-              type="button"
-              disabled={busy}
-              className={entry?.status === status ? 'current' : ''}
-              aria-pressed={entry ? entry.status === status : undefined}
-              onClick={() => save(status)}
-            >
-              {statusLabel(status, title.media_type)}
-            </button>
-          ))}
-          {!entry && (
-            <button type="button" disabled={busy} onClick={() => save(null)}>
-              Just save
+        <p>{entry ? 'On your shelf' : `Add to ${shelf}`}</p>
+        {QUICK_STATUSES.map((status) => (
+          <button
+            key={status}
+            type="button"
+            disabled={busy}
+            className={entry?.status === status ? 'current' : ''}
+            aria-pressed={entry ? entry.status === status : undefined}
+            onClick={() => save(status)}
+          >
+            {statusLabel(status, title.media_type)}
+          </button>
+        ))}
+        {!entry && (
+          <button type="button" disabled={busy} onClick={() => save(null)}>
+            Just save
+          </button>
+        )}
+        <div className="quick-picker-footer">
+          {entry && (
+            <button type="button" className="quick-remove" disabled={busy} onClick={remove}>
+              Remove
             </button>
           )}
-          <div className="quick-picker-footer">
-            {entry && (
-              <button type="button" className="quick-remove" disabled={busy} onClick={remove}>
-                Remove
-              </button>
-            )}
-            <button type="button" className="quick-cancel" onClick={close}>
-              Cancel
-            </button>
-          </div>
+          <button type="button" className="quick-cancel" onClick={close}>
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   )
