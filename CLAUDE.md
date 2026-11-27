@@ -68,6 +68,6 @@ PostgreSQL in production (Neon), SQLite locally and in tests
 
 **Status (November 20):** the MVP is live at https://waga-shelf.vercel.app/ (Vercel, Render, Neon, Clerk). It moved from GitHub Pages on November 20 (ADR 010). Current work is tracked on the GitHub Projects board; the current sprint is in `docs/sprints/`.
 
-**In:** universal search with category filters (anime, manga, manhwa, manhua, light novels via AniList; books via Open Library); title detail pages with official links where available; add to shelf with optional status; shelves per media type that appear dynamically, with status filters; editing status, progress, rating and private notes; removing titles; Home dashboard; sign-in with Clerk; dark, cozy UI; installable PWA.
+**In:** universal search with category filters (anime, manga, manhwa, manhua, light novels via AniList; books via Open Library); title detail pages with official links where available; add to shelf with optional status; shelves per media type that appear dynamically, with status filters and a search over your own shelves (title or author); editing status, progress, rating and private notes; removing titles; Home dashboard; sign-in with Clerk; dark, cozy UI; installable PWA.
 
 **Deferred:** public profiles and shelf visibility, reviews and comments, following and feeds, movies/TV/games, popular-on-WagaShelf rankings, recommendations, AniList import, volumes and seasons in progress tracking.

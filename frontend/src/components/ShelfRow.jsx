@@ -63,8 +63,9 @@ function SeeAll({ path, count }) {
   )
 }
 
-export default function ShelfRow({ type, entries }) {
-  const shelfPath = `/shelf/${type}`
+// `query` is the search on My Shelves: the links to the full shelf carry it, so the shelf opens with the same search.
+export default function ShelfRow({ type, entries, query = '' }) {
+  const shelfPath = `/shelf/${type}${query ? `?q=${encodeURIComponent(query)}` : ''}`
   const preview = previewOf(entries)
   const hasMore = entries.length > PREVIEW
   const rowRef = useRef(null)

@@ -4,7 +4,9 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 
 import { useSession } from '../auth'
 import { Cover, EmptyState, ErrorMessage, Loading, SignInPrompt } from '../components/common'
+import ShelfSearch from '../components/ShelfSearch'
 import { MEDIA_TYPES, STATUSES, plural, progressLabel, statusLabel, titlePath, totalFor } from '../lib/media'
+import { filterEntries } from '../lib/search'
 import { useLibrary } from '../library/LibraryContext'
 
 // The progress text ("12 / 24 episodes ✎"). Tapping it turns it into a number box:
@@ -173,6 +175,7 @@ export default function Shelf() {
   const { mediaType } = useParams()
   const [params, setParams] = useSearchParams()
   const statusFilter = params.get('status') || 'all'
+  const query = params.get('q') || ''
   const { isLoaded, isSignedIn } = useSession()
   const { entries, state, error, reload } = useLibrary()
   const info = MEDIA_TYPES[mediaType]
@@ -182,16 +185,30 @@ export default function Shelf() {
   if (!isSignedIn) return <div className="page"><SignInPrompt /></div>
 
   const shelfEntries = entries.filter((entry) => entry.title.media_type === mediaType)
+  const searched = filterEntries(shelfEntries, query) // the status counts below follow the search
   const counts = {}
-  for (const entry of shelfEntries) counts[entry.status ?? 'none'] = (counts[entry.status ?? 'none'] || 0) + 1
+  for (const entry of searched) counts[entry.status ?? 'none'] = (counts[entry.status ?? 'none'] || 0) + 1
   const filters = [
-    ['all', 'All', shelfEntries.length],
+    ['all', 'All', searched.length],
     ...STATUSES.filter((s) => counts[s]).map((s) => [s, statusLabel(s, mediaType), counts[s]]),
     ...(counts.none ? [['none', 'No status', counts.none]] : []),
   ]
-  const visible = shelfEntries.filter(
+  const visible = searched.filter(
     (entry) => statusFilter === 'all' || (entry.status ?? 'none') === statusFilter,
   )
+
+  // Change one setting in the address and keep the other (the search and the status filter live together).
+  function setParam(name, value) {
+    setParams(
+      (previous) => {
+        const next = new URLSearchParams(previous)
+        if (value) next.set(name, value)
+        else next.delete(name)
+        return next
+      },
+      { preventScrollReset: true, replace: name === 'q' },
+    )
+  }
 
   return (
     <div className="page">
@@ -210,20 +227,37 @@ export default function Shelf() {
 
       {shelfEntries.length > 0 && (
         <>
+          <ShelfSearch
+            value={query}
+            onChange={(text) => setParam('q', text)}
+            placeholder={`Search your ${info.plural.toLowerCase()}…`}
+            label={`Search your ${info.plural.toLowerCase()}`}
+          />
           <div className="chips" role="group" aria-label="Filter by status">
             {filters.map(([value, label, count]) => (
               <button
                 key={value}
                 className={`chip${statusFilter === value ? ' chip-active' : ''}`}
                 aria-pressed={statusFilter === value}
-                onClick={() => setParams(value === 'all' ? {} : { status: value }, { preventScrollReset: true })}
+                onClick={() => setParam('status', value === 'all' ? '' : value)}
               >
                 {label} <span className="chip-count">{count}</span>
               </button>
             ))}
           </div>
           {visible.length === 0 ? (
-            <p className="muted">Nothing here with that status.</p>
+            <div className="empty-inline">
+              <p className="muted">
+                {query
+                  ? `Nothing in your ${info.plural.toLowerCase()} matches “${query}”${statusFilter === 'all' ? '' : ' with that status'}.`
+                  : 'Nothing here with that status.'}
+              </p>
+              {query && (
+                <Link className="button button-small" to={`/discover?q=${encodeURIComponent(query)}&category=${mediaType}`}>
+                  Search Discover for “{query}”
+                </Link>
+              )}
+            </div>
           ) : (
             <ul className="shelf-items">
               {visible.map((entry) => (

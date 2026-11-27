@@ -103,7 +103,7 @@ export default function Discover() {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => e.key === 'Escape' && clearSearch()}
-            placeholder="Search for a title…"
+            placeholder="Search Discover for a title…"
             aria-label="Search for a title"
             maxLength={100}
           />
