@@ -17,12 +17,22 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 copy .env.example .env      # then edit .env: set CLERK_ISSUER to your Frontend API URL
+alembic upgrade head        # create or update the database tables (run again after pulling schema changes)
 fastapi dev main.py         # API at http://127.0.0.1:8000, docs at /docs
 pytest -v                   # run the tests
 ```
 
 The backend reads `backend/.env` when it starts (`database.py` loads it). Without `DATABASE_URL`, data is stored in
 `backend/wagashelf.db` (SQLite).
+
+**Database changes (migrations).** The tables are created and changed by Alembic migrations in
+`backend/migrations/`, not by the app. After pulling a change that touches `models.py`, run
+`alembic upgrade head`. To make a change yourself: edit `models.py`, then
+`alembic revision --autogenerate -m "what changed"`, read the generated file (autogenerate is a
+draft), and run `alembic upgrade head`.
+
+If your local `wagashelf.db` was created before Alembic (tables exist, but no `alembic_version`
+table), run `alembic stamp head` once instead. That marks it as already up to date.
 
 **3. Frontend** (from `frontend`, in a second terminal)
 
@@ -49,6 +59,17 @@ The live setup: React app on **Vercel**, API on **Render**, database on **Neon**
    `render.yaml` and creates the `wagashelf-api` service.
 2. When asked, set `DATABASE_URL` (the Neon string) and `CLERK_ISSUER` (your Clerk Frontend API URL).
 3. When it's live, open `https://<your-service>.onrender.com/health`. It should show `{"status":"ok"}`.
+
+Render's start command runs `alembic upgrade head` before the API starts, so each deploy brings
+the Neon database up to date. **One-time step when Alembic was introduced (ADR 012):** the Neon
+database already had its tables, so it must be told it is at the baseline version *before* the first
+deploy that includes Alembic. Otherwise the baseline migration would try to create tables that exist.
+
+1. In Neon, create a branch or backup of the production database first.
+2. From `backend`, with the Neon string: `$env:DATABASE_URL = "<Neon string>"; alembic stamp head`
+   (then clear it: `Remove-Item Env:DATABASE_URL`). This only adds an `alembic_version` table.
+3. Check with `alembic current`; it should show `0001 (head)`.
+4. Deploy.
 
 The free tier sleeps after a period without requests; the first request afterwards can take
 around a minute. Open the app a minute before a demo.

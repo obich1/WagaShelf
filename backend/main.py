@@ -1,10 +1,8 @@
 import os
-from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import create_db_and_tables
 from routers import catalogue, library
 
 # Websites allowed to call this API from a browser (comma-separated).
@@ -12,15 +10,9 @@ from routers import catalogue, library
 FRONTEND_ORIGINS = os.getenv("FRONTEND_ORIGINS", "http://localhost:5173").split(",")
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Runs once when the server starts, not when this file is imported.
-    create_db_and_tables()
-    yield
-    # Code after yield would run when the server shuts down.
-
-
-app = FastAPI(title="WagaShelf API", lifespan=lifespan)
+# The database tables are no longer created here. Alembic migrations do that (and every later
+# schema change): run `alembic upgrade head` before starting the server (see docs/deployment.md).
+app = FastAPI(title="WagaShelf API")
 
 app.add_middleware(
     CORSMiddleware,

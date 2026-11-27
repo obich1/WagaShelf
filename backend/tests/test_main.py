@@ -4,7 +4,7 @@ from main import app
 
 
 def test_health_check():
-    # Not using "with TestClient(app)", so the lifespan (table creation) doesn't run here.
+    # A plain TestClient is enough: the health check needs no database.
     client = TestClient(app)
     response = client.get("/health")
 

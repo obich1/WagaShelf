@@ -48,7 +48,8 @@ engine = make_engine(DATABASE_URL)
 
 
 def create_db_and_tables(target_engine=None):
-    """Create every table model (table=True). Tables that already exist are skipped."""
+    """Create every table straight from the models. Only for tests: real databases are built and
+    changed by Alembic migrations (backend/migrations), which can alter tables that already exist."""
     import models  # noqa: F401  Importing the models registers their tables with SQLModel.
 
     SQLModel.metadata.create_all(target_engine or engine)

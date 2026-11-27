@@ -32,4 +32,4 @@ database address comes from the `DATABASE_URL` environment variable.
 - The two databases differ in places (time zones, foreign keys in SQLite), which needs care.
   The library flow has also been checked against a real PostgreSQL database.
 - `create_db_and_tables()` only creates missing tables. Changing an existing table (e.g. adding
-  a `username` column) needs a **migration**, planned with Alembic.
+  a `username` column) needs a **migration**, planned with Alembic. (Done: see [ADR 012](012-alembic-migrations.md).)
