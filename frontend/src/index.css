@@ -1511,11 +1511,20 @@ input[type='search']::-webkit-search-cancel-button {
      small cover. */
   min-height: 0;
   overflow: hidden;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--cover-radius);
-  background: color-mix(in srgb, var(--surface) 95%, transparent);
-  backdrop-filter: blur(6px);
+  /* Like the + button, the picker sits where a cover is, and covers don't follow the theme. So it is
+     always a solid dark card, which stands out on Cream as well as on Cozy dark. */
+  background: #241c18;
+  color: #f3e9dc;
+  box-shadow: 0 6px 16px var(--cover-shadow);
   animation: quick-open 0.16s ease;
+}
+
+/* While the picker is open, the cover under it is hidden, so none of its colour or shadow shows
+   around the picker's edge. */
+.title-card:has(.quick-picker) .cover {
+  visibility: hidden;
 }
 
 /* A fade and a small grow. (A 3D flip left the picker slightly off the cover on some phones.) */
@@ -1530,15 +1539,15 @@ input[type='search']::-webkit-search-cancel-button {
   margin: 0 0 0.1rem;
   text-align: center;
   font-size: 0.75rem;
-  color: var(--muted);
+  color: #bfae9c;
 }
 
 .quick-picker button {
   padding: 0.4rem 0.25rem;
-  border: 1px solid var(--border);
+  border: 1px solid #3d312a;
   border-radius: 10px;
-  background: var(--bg);
-  color: var(--text);
+  background: #1b1512;
+  color: #f3e9dc;
   font: inherit;
   font-size: 0.82rem;
   cursor: pointer;
@@ -1546,8 +1555,8 @@ input[type='search']::-webkit-search-cancel-button {
 
 .quick-picker button:hover:not(:disabled),
 .quick-picker button.current {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: #e0a458;
+  color: #e0a458;
 }
 
 .quick-picker button:disabled {
@@ -1564,11 +1573,11 @@ input[type='search']::-webkit-search-cancel-button {
   flex: 1;
   border-color: transparent;
   background: none;
-  color: var(--muted);
+  color: #bfae9c;
 }
 
 .quick-picker-footer .quick-remove {
-  color: var(--danger);
+  color: #e57b6b;
 }
 
 /* The "added" burst: a ring and a handful of small sparks from the button, over in about half a second. */
