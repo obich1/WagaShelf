@@ -1478,6 +1478,17 @@ input[type='search']::-webkit-search-cancel-button {
   backdrop-filter: blur(4px);
 }
 
+/* No blue flash when the controls are pressed: that is the browser's own tap highlight (and, on a
+   quick double tap, a text selection). Taps still work as normal. */
+.quick-add-button,
+.quick-saved,
+.quick-picker button {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
 /* A bigger invisible area around it, so it is still easy to tap. */
 .quick-add-button::after {
   content: '';
@@ -1543,13 +1554,24 @@ input[type='search']::-webkit-search-cancel-button {
 /* While the picker is open, the cover under it is hidden, so none of its colour or shadow shows
    around the picker's edge. */
 .title-card:has(.quick-picker) .cover {
-  visibility: hidden;
+  animation: quick-hide 0s 0.16s forwards; /* only once the picker has finished fading in */
 }
 
-/* A fade and a small grow. (A 3D flip left the picker slightly off the cover on some phones.) */
+@keyframes quick-hide {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* The + button stays in the page (so focus can return to it), but isn't seen or lit up behind the picker. */
+.quick-add:has(.quick-picker) .quick-add-button {
+  opacity: 0;
+}
+
+/* A plain fade. It must not change the picker's size: a grow from 96% made the card look as if it
+   shrank for a moment when the cover disappeared. */
 @keyframes quick-open {
   from {
-    transform: scale(0.96);
     opacity: 0;
   }
 }
