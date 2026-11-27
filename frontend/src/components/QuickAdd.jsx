@@ -1,6 +1,7 @@
-// Quick add: a round button on a cover that saves the title to your shelf without leaving the page.
-// "+" opens a small status picker over the cover; "✓" means it's already on your shelf, and opens
-// the same picker to change the status or remove it. Every change can be undone from the toast.
+// Quick add: saves a title to your shelf without leaving the page.
+// A round "+" on the cover opens a small status picker over it. Once the title is saved, the "+"
+// goes away and its status ("✓ Watching") shows under the card instead; tapping that opens the same
+// picker to change the status or remove the title. Every change can be undone from the toast.
 import { useEffect, useRef, useState } from 'react'
 
 import { SignInLink, useSession } from '../auth'
@@ -13,7 +14,7 @@ const QUICK_STATUSES = ['planning', 'current', 'completed']
 // The sparks of the "added" burst: where each one flies (in pixels) and its colour.
 const SPARKS = Array.from({ length: 10 }, (_, i) => {
   const angle = (i / 10) * Math.PI * 2
-  const distance = i % 2 === 0 ? 34 : 24
+  const distance = i % 2 === 0 ? 30 : 21
   return {
     dx: Math.round(Math.cos(angle) * distance),
     dy: Math.round(Math.sin(angle) * distance),
@@ -130,21 +131,31 @@ export default function QuickAdd({ title }) {
 
   return (
     <div className="quick-add" ref={root}>
-      <button
-        type="button"
-        ref={button}
-        className={`quick-add-button${entry ? ' quick-add-saved' : ''}`}
-        aria-haspopup="true"
-        aria-expanded={open}
-        aria-label={
-          entry
-            ? `On your shelf: ${statusLabel(entry.status, title.media_type)}. Change ${title.title}`
-            : `Quick add ${title.title}`
-        }
-        onClick={() => setOpen(!open)}
-      >
-        {entry ? '✓' : '+'}
-      </button>
+      {entry ? (
+        <button
+          type="button"
+          ref={button}
+          className="quick-saved"
+          aria-haspopup="true"
+          aria-expanded={open}
+          aria-label={`On your shelf: ${statusLabel(entry.status, title.media_type)}. Change ${title.title}`}
+          onClick={() => setOpen(!open)}
+        >
+          ✓ {entry.status ? statusLabel(entry.status, title.media_type) : 'On your shelf'}
+        </button>
+      ) : (
+        <button
+          type="button"
+          ref={button}
+          className="quick-add-button"
+          aria-haspopup="true"
+          aria-expanded={open}
+          aria-label={`Quick add ${title.title}`}
+          onClick={() => setOpen(!open)}
+        >
+          +
+        </button>
+      )}
 
       {bursts > 0 && (
         <span className="quick-add-burst" key={bursts} aria-hidden="true">

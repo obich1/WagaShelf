@@ -108,6 +108,14 @@ describe('quick add', () => {
     expect(library.removeEntry).not.toHaveBeenCalled()
   })
 
+  it('a saved title shows its status under the card instead of a button on the cover', () => {
+    library.entryFor = vi.fn(() => ({ id: 3, status: 'current' }))
+    renderQuickAdd()
+
+    expect(screen.queryByRole('button', { name: /Quick add/ })).toBeNull()
+    expect(screen.getByRole('button', { name: /On your shelf: Watching/ }).textContent).toBe('✓ Watching')
+  })
+
   it('Escape closes the picker', () => {
     renderQuickAdd()
     fireEvent.click(screen.getByRole('button', { name: 'Quick add Frieren' }))

@@ -62,11 +62,11 @@ export function MediaBadge({ mediaType }) {
 }
 
 // A cover with its title underneath, linking to the title's page.
-// With quickAdd, a round button on the cover saves the title to your shelf (see QuickAdd).
+// With quickAdd, a round button on the cover saves the title to your shelf; once it is saved, its
+// status shows under the card instead (see QuickAdd).
 export function TitleCard({ title, footer, quickAdd = false }) {
   return (
     <article className="title-card">
-      {quickAdd && <QuickAdd title={title} />}
       <Link to={titlePath(title)} className="title-card-link">
         <Cover src={title.cover_url} alt={title.title} />
         <h3>{title.title}</h3>
@@ -76,6 +76,7 @@ export function TitleCard({ title, footer, quickAdd = false }) {
         {title.release_year && <span>{title.release_year}</span>}
       </div>
       {footer}
+      {quickAdd && <QuickAdd title={title} />}
     </article>
   )
 }

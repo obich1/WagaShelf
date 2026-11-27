@@ -1432,30 +1432,40 @@ input[type='search']::-webkit-search-cancel-button {
 
 /* ---------- Quick add (on Discover covers) ---------- */
 
+/* The button sits on a cover image, whose colours don't follow the theme. So it is always a dark,
+   semi-transparent disc with a light "+": readable on any cover, in both themes. */
 .quick-add-button {
+  --size: 1.75rem;
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
   z-index: 2;
   display: grid;
   place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--size);
+  height: var(--size);
   padding: 0;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 50%;
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
-  color: var(--text);
+  background: rgba(27, 21, 18, 0.62);
+  color: #f3e9dc;
   font: inherit;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
   backdrop-filter: blur(4px);
-  box-shadow: 0 2px 8px var(--cover-shadow);
+}
+
+/* A bigger invisible area around it, so it is still easy to tap. */
+.quick-add-button::after {
+  content: '';
+  position: absolute;
+  inset: -0.4rem;
 }
 
 .quick-add-button:hover:not(:disabled) {
   background: var(--accent);
+  border-color: var(--accent);
   color: var(--accent-text);
 }
 
@@ -1464,10 +1474,22 @@ input[type='search']::-webkit-search-cancel-button {
   cursor: default;
 }
 
-.quick-add-saved {
-  background: var(--success);
-  color: var(--accent-text);
-  font-size: 1rem;
+/* A saved title: its status under the card ("✓ Watching"). Tap it to change or remove. */
+.quick-saved {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.1rem 0;
+  border: 0;
+  background: none;
+  color: var(--success);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.quick-saved:hover {
+  text-decoration: underline;
 }
 
 /* The status choices, shown over the cover. */
@@ -1545,8 +1567,8 @@ input[type='search']::-webkit-search-cancel-button {
 /* The "added" burst: a ring and a handful of small sparks from the button, over in about half a second. */
 .quick-add-burst {
   position: absolute;
-  top: calc(0.5rem + 1.125rem);
-  right: calc(0.5rem + 1.125rem);
+  top: calc(0.5rem + 0.875rem);
+  right: calc(0.5rem + 0.875rem);
   z-index: 4;
   width: 0;
   height: 0;
@@ -1566,10 +1588,10 @@ input[type='search']::-webkit-search-cancel-button {
 .quick-add-burst::before {
   content: '';
   position: absolute;
-  left: -1.125rem;
-  top: -1.125rem;
-  width: 2.25rem;
-  height: 2.25rem;
+  left: -0.875rem;
+  top: -0.875rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
   border: 2px solid var(--success);
   animation: quick-ring 0.5s ease-out forwards;
