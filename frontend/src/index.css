@@ -589,9 +589,11 @@ input[type='search']::-webkit-search-cancel-button {
   text-decoration: none;
 }
 
-.title-card-link:hover .cover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow);
+@media (hover: hover) {
+  .title-card-link:hover .cover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
 }
 
 .title-card .cover {
@@ -1505,16 +1507,21 @@ input[type='search']::-webkit-search-cancel-button {
   justify-content: center;
   gap: 0.35rem;
   padding: 0.6rem;
+  /* Exactly the cover's size: without these two lines the choices can make the picker taller than a
+     small cover. */
+  min-height: 0;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--cover-radius);
   background: color-mix(in srgb, var(--surface) 95%, transparent);
   backdrop-filter: blur(6px);
-  animation: quick-flip 0.18s ease;
+  animation: quick-open 0.16s ease;
 }
 
-@keyframes quick-flip {
+/* A fade and a small grow. (A 3D flip left the picker slightly off the cover on some phones.) */
+@keyframes quick-open {
   from {
-    transform: perspective(600px) rotateY(-25deg);
+    transform: scale(0.96);
     opacity: 0;
   }
 }
@@ -1671,6 +1678,22 @@ input[type='search']::-webkit-search-cancel-button {
   /* Above the bottom navigation. */
   .toast-region {
     bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
+
+  /* Covers are small here (about 110px wide), so the picker drops its heading and tightens up. */
+  .quick-picker {
+    gap: 0.2rem;
+    padding: 0.4rem;
+  }
+
+  .quick-picker p {
+    display: none;
+  }
+
+  .quick-picker button {
+    padding: 0.25rem 0.15rem;
+    font-size: 0.72rem;
+    line-height: 1.2;
   }
 }
 

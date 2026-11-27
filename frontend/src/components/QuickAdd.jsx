@@ -35,7 +35,8 @@ export default function QuickAdd({ title }) {
   const entry = library.entryFor(title.source, title.source_id)
   const shelf = MEDIA_TYPES[title.media_type]?.plural ?? 'your shelf'
 
-  // Close on Escape (focus goes back to the button) or a click elsewhere. Focus the first choice on open.
+  // Close on Escape (focus goes back to the button) or a tap elsewhere. Focus the first choice on open.
+  // It listens for the click, not the first touch, so scrolling the page with a finger keeps it open.
   useEffect(() => {
     if (!open) return undefined
     root.current.querySelector('.quick-picker button')?.focus({ preventScroll: true })
@@ -45,14 +46,14 @@ export default function QuickAdd({ title }) {
         button.current?.focus()
       }
     }
-    const onPointerDown = (event) => {
+    const onClickOutside = (event) => {
       if (!root.current.contains(event.target)) setOpen(false)
     }
     document.addEventListener('keydown', onKeyDown)
-    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('click', onClickOutside)
     return () => {
       document.removeEventListener('keydown', onKeyDown)
-      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('click', onClickOutside)
     }
   }, [open])
 
