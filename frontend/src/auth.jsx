@@ -58,7 +58,7 @@ export function useSession() {
   const { isLoaded, isSignedIn, getToken } = useAuth()
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { user } = useUser()
-  return { isLoaded, isSignedIn: Boolean(isSignedIn), userName: user?.firstName || user?.username || null, getToken }
+  return { isLoaded, isSignedIn: Boolean(isSignedIn), userName: user?.username || user?.firstName || null, getToken }
 }
 
 export function SignInLink({ children = 'Sign in', className = 'button', ...buttonProps }) {
