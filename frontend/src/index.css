@@ -316,6 +316,12 @@ main {
 
 .breadcrumb a {
   color: var(--muted);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover,
+.breadcrumb a:focus-visible {
+  text-decoration: underline; /* the underline comes back as the hint that it's a link */
 }
 
 /* ---------- Buttons, chips and form controls ---------- */
