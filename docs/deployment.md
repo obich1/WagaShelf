@@ -9,6 +9,10 @@ You need Python 3.12+ and Node.js 22+.
 1. Create a free account at clerk.com and create an application (email sign-in is enough).
 2. In the Clerk dashboard, open **API keys** and note the **Publishable key** (`pk_test_...`) and
    the **Frontend API URL** (`https://<something>.clerk.accounts.dev`).
+3. **Usernames** (ADR 013). Both steps are needed, in each Clerk instance (development and, later, production):
+   - **User & authentication → Username**: turn it on (and make it required if every account should have one).
+   - **Sessions → Customize session token**: add the claim `{ "username": "{{user.username}}" }`.
+     The backend copies it to `users.username` on the person's next request. Without the claim, nothing is saved.
 
 **2. Backend** (from `backend`, in PowerShell)
 

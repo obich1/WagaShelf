@@ -22,3 +22,4 @@ they explain *why* WagaShelf is built the way it is, which the code alone can't 
 | [010](010-host-the-frontend-on-vercel.md) | Host the frontend on Vercel | Accepted |
 | [011](011-themes-as-css-variable-sets.md) | Themes are sets of CSS variables | Accepted |
 | [012](012-alembic-migrations.md) | Schema changes go through Alembic migrations | Accepted |
+| [013](013-usernames-copied-from-the-session-token.md) | Usernames live in Clerk and are copied from the session token | Accepted |
