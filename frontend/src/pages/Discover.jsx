@@ -155,6 +155,7 @@ export default function Discover() {
               <TitleCard
                 key={`${title.source}-${title.source_id}`}
                 title={title}
+                quickAdd
                 footer={saved && <span className="saved-tag">On your shelf</span>}
               />
             )
