@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { SignInLink } from '../auth'
 import { MEDIA_TYPES, titlePath } from '../lib/media'
+import QuickAdd from './QuickAdd'
 
 export function Loading({ label = 'Loading…' }) {
   return (
@@ -61,7 +62,9 @@ export function MediaBadge({ mediaType }) {
 }
 
 // A cover with its title underneath, linking to the title's page.
-export function TitleCard({ title, footer }) {
+// With quickAdd, a round button on the cover saves the title to your shelf; once it is saved, its
+// status shows under the card instead (see QuickAdd).
+export function TitleCard({ title, footer, quickAdd = false }) {
   return (
     <article className="title-card">
       <Link to={titlePath(title)} className="title-card-link">
@@ -73,6 +76,7 @@ export function TitleCard({ title, footer }) {
         {title.release_year && <span>{title.release_year}</span>}
       </div>
       {footer}
+      {quickAdd && <QuickAdd title={title} />}
     </article>
   )
 }

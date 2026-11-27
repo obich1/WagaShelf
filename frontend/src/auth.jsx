@@ -61,17 +61,19 @@ export function useSession() {
   return { isLoaded, isSignedIn: Boolean(isSignedIn), userName: user?.firstName || user?.username || null, getToken }
 }
 
-export function SignInLink({ children = 'Sign in', className = 'button' }) {
+export function SignInLink({ children = 'Sign in', className = 'button', ...buttonProps }) {
   if (!signInEnabled) {
     return (
-      <button className={className} disabled title="Sign-in isn't configured yet">
+      <button className={className} disabled title="Sign-in isn't configured yet" {...buttonProps}>
         {children}
       </button>
     )
   }
   return (
     <SignInButton mode="modal">
-      <button className={className}>{children}</button>
+      <button className={className} {...buttonProps}>
+        {children}
+      </button>
     </SignInButton>
   )
 }

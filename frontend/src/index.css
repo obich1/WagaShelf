@@ -598,6 +598,10 @@ input[type='search']::-webkit-search-cancel-button {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
+.title-card {
+  position: relative; /* the quick-add button and picker are placed over the cover */
+}
+
 .title-card h3 {
   margin: 0.6rem 0 0.25rem;
   font-size: 0.98rem;
@@ -1424,4 +1428,259 @@ input[type='search']::-webkit-search-cancel-button {
   overflow: hidden;
   border-radius: 8px;
   border: 1px solid var(--border);
+}
+
+/* ---------- Quick add (on Discover covers) ---------- */
+
+/* The button sits on a cover image, whose colours don't follow the theme. So it is always a dark,
+   semi-transparent disc with a light "+": readable on any cover, in both themes. */
+.quick-add-button {
+  --size: 1.75rem;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  background: rgba(27, 21, 18, 0.62);
+  color: #f3e9dc;
+  font: inherit;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+/* A bigger invisible area around it, so it is still easy to tap. */
+.quick-add-button::after {
+  content: '';
+  position: absolute;
+  inset: -0.4rem;
+}
+
+.quick-add-button:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.quick-add-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* A saved title: its status under the card ("✓ Watching"). Tap it to change or remove. */
+.quick-saved {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.1rem 0;
+  border: 0;
+  background: none;
+  color: var(--success);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.quick-saved:hover {
+  text-decoration: underline;
+}
+
+/* The status choices, shown over the cover. */
+.quick-picker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  aspect-ratio: 2 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--cover-radius);
+  background: color-mix(in srgb, var(--surface) 95%, transparent);
+  backdrop-filter: blur(6px);
+  animation: quick-flip 0.18s ease;
+}
+
+@keyframes quick-flip {
+  from {
+    transform: perspective(600px) rotateY(-25deg);
+    opacity: 0;
+  }
+}
+
+.quick-picker p {
+  margin: 0 0 0.1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.quick-picker button {
+  padding: 0.4rem 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.quick-picker button:hover:not(:disabled),
+.quick-picker button.current {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.quick-picker button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.quick-picker-footer {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.quick-picker-footer button {
+  flex: 1;
+  border-color: transparent;
+  background: none;
+  color: var(--muted);
+}
+
+.quick-picker-footer .quick-remove {
+  color: var(--danger);
+}
+
+/* The "added" burst: a ring and a handful of small sparks from the button, over in about half a second. */
+.quick-add-burst {
+  position: absolute;
+  top: calc(0.5rem + 0.875rem);
+  right: calc(0.5rem + 0.875rem);
+  z-index: 4;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.quick-add-burst i {
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: quick-spark 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+
+.quick-add-burst::before {
+  content: '';
+  position: absolute;
+  left: -0.875rem;
+  top: -0.875rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 2px solid var(--success);
+  animation: quick-ring 0.5s ease-out forwards;
+}
+
+@keyframes quick-spark {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(var(--dx), var(--dy)) scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes quick-ring {
+  from {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* ---------- Toast ---------- */
+
+.toast-region {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+  pointer-events: none; /* only the toast itself takes clicks */
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 100%;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius);
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: var(--shadow);
+  font-size: 0.92rem;
+  pointer-events: auto;
+  animation: toast-rise 0.2s ease;
+}
+
+.toast-action {
+  flex: none;
+  padding: 0.1rem 0.25rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@keyframes toast-rise {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  /* Above the bottom navigation. */
+  .toast-region {
+    bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-picker,
+  .toast {
+    animation: none;
+  }
+
+  .quick-add-burst {
+    display: none;
+  }
 }

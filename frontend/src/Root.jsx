@@ -6,6 +6,7 @@ import { RouterProvider, createHashRouter } from 'react-router-dom'
 
 import App from './App'
 import { AuthProvider } from './auth'
+import { ToastProvider } from './components/Toast'
 import { LibraryProvider } from './library/LibraryContext'
 import { ThemeProvider } from './theme'
 
@@ -23,7 +24,9 @@ export default function Root() {
       <ThemeProvider>
         <AuthProvider>
           <LibraryProvider>
-            <RouterProvider router={router} />
+            <ToastProvider>
+              <RouterProvider router={router} />
+            </ToastProvider>
           </LibraryProvider>
         </AuthProvider>
       </ThemeProvider>

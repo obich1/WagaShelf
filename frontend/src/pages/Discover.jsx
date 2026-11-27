@@ -5,7 +5,6 @@ import { useSearchParams } from 'react-router-dom'
 import { request } from '../api/client'
 import { EmptyState, ErrorMessage, Loading, TitleCard } from '../components/common'
 import { MEDIA_ORDER, MEDIA_TYPES } from '../lib/media'
-import { useLibrary } from '../library/LibraryContext'
 
 const CATEGORIES = [['all', 'All'], ...MEDIA_ORDER.map((type) => [type, MEDIA_TYPES[type].plural])]
 
@@ -36,7 +35,6 @@ export default function Discover() {
   const [loading, setLoading] = useState(!cached)
   const [error, setError] = useState(null)
   const [attempt, setAttempt] = useState(0)
-  const { entryFor } = useLibrary()
   const searchInput = useRef(null)
 
   useEffect(() => setDraft(query), [query])
@@ -149,16 +147,9 @@ export default function Discover() {
       )}
       {!loading && !error && results?.length > 0 && (
         <div className="title-grid">
-          {results.map((title) => {
-            const saved = entryFor(title.source, title.source_id)
-            return (
-              <TitleCard
-                key={`${title.source}-${title.source_id}`}
-                title={title}
-                footer={saved && <span className="saved-tag">On your shelf</span>}
-              />
-            )
-          })}
+          {results.map((title) => (
+            <TitleCard key={`${title.source}-${title.source_id}`} title={title} quickAdd />
+          ))}
         </div>
       )}
     </div>
