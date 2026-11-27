@@ -38,6 +38,16 @@
   --wall-hover: rgba(255, 255, 255, 0.025);
   --see-all-bg: rgba(255, 255, 255, 0.04);
 
+  /* The quick-add picker: a solid card that sits where a cover is. */
+  --picker-bg: #241c18;
+  --picker-border: rgba(255, 255, 255, 0.12);
+  --picker-button-bg: #1b1512;
+  --picker-button-border: #3d312a;
+  --picker-text: #f3e9dc;
+  --picker-muted: #bfae9c;
+  --picker-accent: #e0a458;
+  --picker-danger: #e57b6b;
+
   /* Media-type badges: a background and text colour for each. */
   --badge-anime-bg: #3a2b4a;
   --badge-anime-text: #d9c2f0;
@@ -100,6 +110,16 @@
   --wall-shade: rgba(92, 62, 34, 0.14);
   --wall-hover: rgba(255, 255, 255, 0.18);
   --see-all-bg: rgba(247, 239, 224, 0.4);
+
+  /* On Cream the picker is a softer warm cocoa, not near-black. */
+  --picker-bg: #4a392d;
+  --picker-border: rgba(255, 255, 255, 0.14);
+  --picker-button-bg: #3a2c22;
+  --picker-button-border: #6a5545;
+  --picker-text: #f6ecdc;
+  --picker-muted: #d6c7b2;
+  --picker-accent: #f0b86c;
+  --picker-danger: #f2a193;
   --shadow: 0 10px 30px rgba(92, 62, 34, 0.18);
 
   --badge-anime-bg: #e6d8f2;
@@ -1511,11 +1531,19 @@ input[type='search']::-webkit-search-cancel-button {
      small cover. */
   min-height: 0;
   overflow: hidden;
-  border: 1px solid var(--border);
+  border: 1px solid var(--picker-border);
   border-radius: var(--cover-radius);
-  background: color-mix(in srgb, var(--surface) 95%, transparent);
-  backdrop-filter: blur(6px);
+  /* Solid (not see-through), so it stands out on the page and none of the cover shows around it. */
+  background: var(--picker-bg);
+  color: var(--picker-text);
+  box-shadow: 0 6px 16px var(--cover-shadow);
   animation: quick-open 0.16s ease;
+}
+
+/* While the picker is open, the cover under it is hidden, so none of its colour or shadow shows
+   around the picker's edge. */
+.title-card:has(.quick-picker) .cover {
+  visibility: hidden;
 }
 
 /* A fade and a small grow. (A 3D flip left the picker slightly off the cover on some phones.) */
@@ -1530,15 +1558,15 @@ input[type='search']::-webkit-search-cancel-button {
   margin: 0 0 0.1rem;
   text-align: center;
   font-size: 0.75rem;
-  color: var(--muted);
+  color: var(--picker-muted);
 }
 
 .quick-picker button {
   padding: 0.4rem 0.25rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--picker-button-border);
   border-radius: 10px;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--picker-button-bg);
+  color: var(--picker-text);
   font: inherit;
   font-size: 0.82rem;
   cursor: pointer;
@@ -1546,8 +1574,8 @@ input[type='search']::-webkit-search-cancel-button {
 
 .quick-picker button:hover:not(:disabled),
 .quick-picker button.current {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--picker-accent);
+  color: var(--picker-accent);
 }
 
 .quick-picker button:disabled {
@@ -1564,11 +1592,11 @@ input[type='search']::-webkit-search-cancel-button {
   flex: 1;
   border-color: transparent;
   background: none;
-  color: var(--muted);
+  color: var(--picker-muted);
 }
 
 .quick-picker-footer .quick-remove {
-  color: var(--danger);
+  color: var(--picker-danger);
 }
 
 /* The "added" burst: a ring and a handful of small sparks from the button, over in about half a second. */
