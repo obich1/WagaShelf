@@ -41,7 +41,7 @@ How the work is organised (Scrum, the board, the Definition of Done) is in `docs
 ## Environment
 
 - Windows, PowerShell, PyCharm.
-- Backend: `backend\.venv` (activate with `.\.venv\Scripts\Activate.ps1` from `backend`), run with `fastapi dev main.py`, test with `pytest -v`.
+- Backend: `backend\.venv` (activate with `.\.venv\Scripts\Activate.ps1` from `backend`), `alembic upgrade head` to create/update the database, run with `fastapi dev main.py`, test with `pytest -v`.
 - Frontend: from `frontend`, `npm install` once, then `npm run dev`; `npm run lint`, `npm test` and `npm run build` before pushing.
 - Local settings: `backend/.env` and `frontend/.env.local` (copy the `.env.example` files). Deployment steps: `docs/deployment.md`.
 - **Don't write files with PowerShell's `>` redirect** (it saves UTF-16). Use `Out-File -Encoding utf8` or write the file directly.
