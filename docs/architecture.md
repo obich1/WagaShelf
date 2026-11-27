@@ -70,6 +70,7 @@ erDiagram
 
     users {
         string id PK "Clerk user id"
+        string username UK "copy of the Clerk username, optional"
         timestamptz created_at
     }
     titles {

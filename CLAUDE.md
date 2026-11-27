@@ -61,7 +61,7 @@ PostgreSQL in production (Neon), SQLite locally and in tests
 ```
 
 - **Sign-in:** Clerk. The backend verifies Clerk's session tokens (JWTs) with Clerk's public keys and never handles passwords.
-- **Data model:** `users` (Clerk id), `titles` (shared catalogue, unique per source + source id), `library_entries` (one user's status, progress, rating and private notes for one title; unique per user + title).
+- **Data model:** `users` (Clerk id, optional username), `titles` (shared catalogue, unique per source + source id), `library_entries` (one user's status, progress, rating and private notes for one title; unique per user + title).
 - **Search:** the backend calls AniList and Open Library and returns one common result format.
 
 ## MVP scope (from the product plan)
