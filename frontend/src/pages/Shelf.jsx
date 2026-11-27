@@ -214,7 +214,7 @@ export default function Shelf() {
     <div className="page">
       <header className="page-header">
         <p className="breadcrumb">
-          <Link to="/shelves">My Shelves</Link> /
+          <Link to="/shelves">← My Shelves</Link>
         </p>
         <h1>{info.plural}</h1>
       </header>
