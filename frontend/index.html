@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="One cozy shelf for everything you watch and read." />
     <meta name="theme-color" content="#1b1512" />
+    <!-- Picks the theme before the page paints, so there is no flash of the wrong colours.
+         Same rules as src/theme.jsx: a saved choice wins, otherwise follow the device. -->
+    <script>
+      try {
+        var saved = localStorage.getItem('wagashelf-theme')
+        var theme = saved === 'light' || saved === 'dark' ? saved : matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        document.documentElement.dataset.theme = theme
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#ece0ca' : '#1b1512')
+      } catch (e) {}
+    </script>
     <title>WagaShelf</title>
 
     <!-- Link previews (LinkedIn, Discord, Slack, X...). Their servers read these tags without

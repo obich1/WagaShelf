@@ -33,6 +33,8 @@ beforeEach(() => {
   window.location.hash = '#/'
   // jsdom can't scroll; ScrollRestoration calls it on every page change.
   window.scrollTo = () => {}
+  // jsdom has no matchMedia either; the theme switcher asks the device for its colour scheme.
+  vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener: () => {}, removeEventListener: () => {} }))
   // No real network in tests: any API call gets an empty, successful answer.
   vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ results: [], unavailable_sources: [] }))))
 })

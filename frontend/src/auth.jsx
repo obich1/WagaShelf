@@ -4,22 +4,34 @@
 import { ClerkProvider, SignInButton, UserButton, useAuth, useUser } from '@clerk/react'
 
 import { CLERK_PUBLISHABLE_KEY } from './config'
+import { useTheme } from './theme'
 
 export const signInEnabled = Boolean(CLERK_PUBLISHABLE_KEY)
 
-// Clerk's sign-in screens, styled to match WagaShelf's colours.
-const appearance = {
-  variables: {
+// Clerk's sign-in screens, styled to match WagaShelf's colours. Clerk wants plain colour values,
+// so these repeat the CSS variables in index.css for each theme.
+const colours = {
+  dark: {
     colorPrimary: '#e0a458',
     colorBackground: '#241c18',
     colorText: '#f3e9dc',
     colorTextSecondary: '#bfae9c',
     colorInputBackground: '#1b1512',
     colorInputText: '#f3e9dc',
-    borderRadius: '10px',
-    fontFamily: 'Inter, system-ui, sans-serif',
+  },
+  light: {
+    colorPrimary: '#945020',
+    colorBackground: '#f7efe0',
+    colorText: '#2d221b',
+    colorTextSecondary: '#6b5a4f',
+    colorInputBackground: '#ece0ca',
+    colorInputText: '#2d221b',
   },
 }
+
+const appearanceFor = (theme) => ({
+  variables: { ...colours[theme], borderRadius: '10px', fontFamily: 'Inter, system-ui, sans-serif' },
+})
 
 // Where to go after signing out: WagaShelf's home page, as a full address.
 // Clerk resolves relative addresses like "./" from the site's root, not from the app's folder.
@@ -28,14 +40,13 @@ const appearance = {
 const homeUrl = new URL('./', window.location.href).href
 
 export function AuthProvider({ children }) {
+  const { theme } = useTheme()
   if (!signInEnabled) return children
   return (
-  <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}
-    appearance={appearance} afterSignOutUrl={homeUrl}>
-    {children}
-  </ClerkProvider>
-
-    )
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} appearance={appearanceFor(theme)} afterSignOutUrl={homeUrl}>
+      {children}
+    </ClerkProvider>
+  )
 }
 
 const signedOutSession = { isLoaded: true, isSignedIn: false, userName: null, getToken: async () => null }

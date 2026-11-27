@@ -21,6 +21,37 @@
   --wood-grain: rgba(0, 0, 0, 0.22);
   --bracket: #2a2622;
 
+  /* Extra tokens, so a theme can restyle everything without touching the rules below. */
+  --bg-glow: rgba(224, 164, 88, 0.08);
+  --header-bg: rgba(27, 21, 18, 0.9);
+  --nav-bg: rgba(27, 21, 18, 0.97);
+  --empty-bg: rgba(36, 28, 24, 0.6);
+  --banner-bg: #4a3320;
+  --banner-text: #f0b86c;
+  --danger-border: rgba(229, 123, 107, 0.5);
+  --cover-shadow: rgba(0, 0, 0, 0.35);
+  --cover-shadow-strong: rgba(0, 0, 0, 0.55);
+  --plank-shadow: rgba(0, 0, 0, 0.5);
+  --wall-texture: rgba(255, 255, 255, 0.018);
+  --wall-sheen: rgba(255, 255, 255, 0.05);
+  --wall-shade: rgba(0, 0, 0, 0.18);
+  --wall-hover: rgba(255, 255, 255, 0.025);
+  --see-all-bg: rgba(255, 255, 255, 0.04);
+
+  /* Media-type badges: a background and text colour for each. */
+  --badge-anime-bg: #3a2b4a;
+  --badge-anime-text: #d9c2f0;
+  --badge-manga-bg: #4a2b2b;
+  --badge-manga-text: #f0c2c2;
+  --badge-manhwa-bg: #24394a;
+  --badge-manhwa-text: #bfdcf0;
+  --badge-manhua-bg: #4a3d24;
+  --badge-manhua-text: #f0dcae;
+  --badge-novel-bg: #2b4a3a;
+  --badge-novel-text: #c2f0d6;
+  --badge-book-bg: #3f3427;
+  --badge-book-text: #ecd9bd;
+
   --radius: 12px;
   --radius-small: 8px;
   --cover-radius: 24px; /* full-size covers; smaller covers use a share of it */
@@ -32,6 +63,61 @@
   color-scheme: dark;
 }
 
+/* The light theme ("Cream"): only the values change, every rule below keeps using the same names.
+   index.html and src/theme.jsx put data-theme="light" on <html> to switch it on. */
+:root[data-theme='light'] {
+  --bg: #ece0ca;
+  --surface: #f7efe0;
+  --surface-2: #e4d5ba;
+  --border: #d5c1a1;
+  --text: #2d221b;
+  --muted: #6b5a4f;
+  --accent: #945020;
+  --accent-strong: #7d4219;
+  --accent-text: #fffaf0;
+  --danger: #b4473a;
+  --success: #3f6b4d;
+  --wall: #dfcdae;
+  --wall-light: #eee2cd;
+  --wood-top: #a8754d;
+  --wood-front: #8a5a36;
+  --wood-front-dark: #5e3b20;
+  --wood-grain: rgba(0, 0, 0, 0.18);
+  --bracket: #6b5a4b;
+
+  --bg-glow: rgba(148, 80, 32, 0.1);
+  --header-bg: rgba(236, 224, 202, 0.92);
+  --nav-bg: rgba(247, 239, 224, 0.98);
+  --empty-bg: rgba(247, 239, 224, 0.6);
+  --banner-bg: #f0d2ae;
+  --banner-text: #6b3a14;
+  --danger-border: rgba(180, 71, 58, 0.5);
+  --cover-shadow: rgba(70, 45, 25, 0.28);
+  --cover-shadow-strong: rgba(70, 45, 25, 0.4);
+  --plank-shadow: rgba(92, 62, 34, 0.3);
+  --wall-texture: rgba(120, 90, 60, 0.035);
+  --wall-sheen: rgba(255, 255, 255, 0.2);
+  --wall-shade: rgba(92, 62, 34, 0.14);
+  --wall-hover: rgba(255, 255, 255, 0.18);
+  --see-all-bg: rgba(247, 239, 224, 0.4);
+  --shadow: 0 10px 30px rgba(92, 62, 34, 0.18);
+
+  --badge-anime-bg: #e6d8f2;
+  --badge-anime-text: #54307a;
+  --badge-manga-bg: #f4d6d3;
+  --badge-manga-text: #7a2c26;
+  --badge-manhwa-bg: #d2e3f2;
+  --badge-manhwa-text: #1f4566;
+  --badge-manhua-bg: #f2e4bf;
+  --badge-manhua-text: #6b4c0d;
+  --badge-novel-bg: #cfe8da;
+  --badge-novel-text: #1e5238;
+  --badge-book-bg: #e8dcc6;
+  --badge-book-text: #5a4527;
+
+  color-scheme: light;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -40,7 +126,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(224, 164, 88, 0.08), transparent 60%),
+    radial-gradient(1200px 600px at 10% -10%, var(--bg-glow), transparent 60%),
     var(--bg);
   color: var(--text);
   font-family: var(--font-body);
@@ -107,7 +193,7 @@ img {
   align-items: center;
   gap: 1.5rem;
   padding: 0.75rem max(1rem, calc((100vw - var(--page-width)) / 2));
-  background: rgba(27, 21, 18, 0.9);
+  background: var(--header-bg);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
 }
@@ -153,6 +239,7 @@ img {
 .account {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
   min-width: 2rem;
   justify-content: flex-end;
 }
@@ -161,8 +248,8 @@ img {
   margin: 0;
   padding: 0.5rem 1rem;
   text-align: center;
-  background: #4a3320;
-  color: var(--accent-strong);
+  background: var(--banner-bg);
+  color: var(--banner-text);
   font-size: 0.9rem;
 }
 
@@ -412,7 +499,7 @@ input[type='search']::-webkit-search-cancel-button {
 }
 
 .notice-error {
-  border-color: rgba(229, 123, 107, 0.5);
+  border-color: var(--danger-border);
 }
 
 .empty-state {
@@ -420,7 +507,7 @@ input[type='search']::-webkit-search-cancel-button {
   padding: 3rem 1rem;
   border: 1px dashed var(--border);
   border-radius: var(--radius);
-  background: rgba(36, 28, 24, 0.6);
+  background: var(--empty-bg);
 }
 
 .empty-state p {
@@ -453,7 +540,7 @@ input[type='search']::-webkit-search-cancel-button {
   object-fit: cover;
   border-radius: var(--cover-radius);
   background: var(--surface-2);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 16px var(--cover-shadow);
 }
 
 .cover-small {
@@ -540,33 +627,33 @@ input[type='search']::-webkit-search-cancel-button {
 }
 
 .badge-anime {
-  background: #3a2b4a;
-  color: #d9c2f0;
+  background: var(--badge-anime-bg);
+  color: var(--badge-anime-text);
 }
 
 .badge-manga {
-  background: #4a2b2b;
-  color: #f0c2c2;
+  background: var(--badge-manga-bg);
+  color: var(--badge-manga-text);
 }
 
 .badge-manhwa {
-  background: #24394a;
-  color: #bfdcf0;
+  background: var(--badge-manhwa-bg);
+  color: var(--badge-manhwa-text);
 }
 
 .badge-manhua {
-  background: #4a3d24;
-  color: #f0dcae;
+  background: var(--badge-manhua-bg);
+  color: var(--badge-manhua-text);
 }
 
 .badge-novel {
-  background: #2b4a3a;
-  color: #c2f0d6;
+  background: var(--badge-novel-bg);
+  color: var(--badge-novel-text);
 }
 
 .badge-book {
-  background: #3f3427;
-  color: #ecd9bd;
+  background: var(--badge-book-bg);
+  color: var(--badge-book-text);
 }
 
 .saved-tag {
@@ -704,9 +791,9 @@ input[type='search']::-webkit-search-cancel-button {
   padding: 1.1rem 1rem 2rem;
   border-radius: 18px;
   background:
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0 2px, transparent 2px 46px),
+    repeating-linear-gradient(90deg, var(--wall-texture) 0 2px, transparent 2px 46px),
     radial-gradient(120% 80% at 50% 0%, var(--wall-light), var(--wall));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 -30px 40px rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 1px 0 var(--wall-sheen), inset 0 -30px 40px var(--wall-shade);
 }
 
 .shelf-wall-header {
@@ -775,7 +862,7 @@ input[type='search']::-webkit-search-cancel-button {
   transform: rotateY(-8deg);
   transform-origin: left center;
   transition: transform 0.25s ease;
-  box-shadow: 8px 10px 18px rgba(0, 0, 0, 0.55);
+  box-shadow: 8px 10px 18px var(--cover-shadow-strong);
 }
 
 .shelf-book-link:hover .cover,
@@ -857,7 +944,7 @@ input[type='search']::-webkit-search-cancel-button {
   gap: 0.15rem;
   color: var(--muted);
   font-size: 0.85rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--see-all-bg);
   border: 2px dashed color-mix(in srgb, var(--muted) 45%, transparent);
   box-shadow: none;
 }
@@ -884,9 +971,9 @@ input[type='search']::-webkit-search-cancel-button {
 
 .shelf-wall-tappable:hover:not(:has(a:hover)) {
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -30px 40px rgba(0, 0, 0, 0.18),
-    inset 0 0 0 999px rgba(255, 255, 255, 0.025);
+    inset 0 1px 0 var(--wall-sheen),
+    inset 0 -30px 40px var(--wall-shade),
+    inset 0 0 0 999px var(--wall-hover);
 }
 
 /* Curved shelf: covers snap to the centre, and the curve hook turns each one by its distance from it.
@@ -919,7 +1006,7 @@ input[type='search']::-webkit-search-cancel-button {
 .plank {
   position: relative;
   margin-top: -2px;
-  filter: drop-shadow(0 16px 14px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 16px 14px var(--plank-shadow));
 }
 
 .plank-top {
@@ -1201,7 +1288,7 @@ input[type='search']::-webkit-search-cancel-button {
     right: 0;
     justify-content: space-around;
     padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom));
-    background: rgba(27, 21, 18, 0.97);
+    background: var(--nav-bg);
     border-top: 1px solid var(--border);
   }
 
@@ -1250,4 +1337,91 @@ input[type='search']::-webkit-search-cancel-button {
   .search-bar .button {
     padding-inline: 1rem;
   }
+}
+
+/* ---------- Theme switcher ---------- */
+
+.theme-menu {
+  position: relative;
+}
+
+.theme-button {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.theme-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.theme-popup {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  z-index: 10;
+  width: 16rem;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.theme-popup-title {
+  margin: 0.25rem 0.5rem 0.4rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem;
+  border: 0;
+  border-radius: var(--radius-small);
+  background: none;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.theme-option:hover,
+.theme-option[aria-checked='true'] {
+  background: var(--surface-2);
+}
+
+.theme-option[aria-checked='true'] {
+  font-weight: 600;
+}
+
+.theme-option small {
+  display: block;
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 0.78rem;
+}
+
+.theme-swatch {
+  flex: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 1.9rem;
+  height: 1.9rem;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }

@@ -7,6 +7,7 @@ import { RouterProvider, createHashRouter } from 'react-router-dom'
 import App from './App'
 import { AuthProvider } from './auth'
 import { LibraryProvider } from './library/LibraryContext'
+import { ThemeProvider } from './theme'
 
 // The router uses "hash" URLs: the page lives in the part after "#", e.g. /#/discover.
 // They started on GitHub Pages, which only serves real files, so they avoided 404 errors when
@@ -19,11 +20,13 @@ const router = createHashRouter([{ path: '*', element: <App /> }])
 export default function Root() {
   return (
     <StrictMode>
-      <AuthProvider>
-        <LibraryProvider>
-          <RouterProvider router={router} />
-        </LibraryProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <LibraryProvider>
+            <RouterProvider router={router} />
+          </LibraryProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </StrictMode>
   )
 }

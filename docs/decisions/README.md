@@ -20,3 +20,4 @@ they explain *why* WagaShelf is built the way it is, which the code alone can't 
 | [006](006-focused-launch-categories.md) | Focus the launch on anime, manga and related media | Accepted |
 | [007](007-data-router-for-scroll-restoration.md) | A data router, so Back returns to the same scroll position | Accepted |
 | [010](010-host-the-frontend-on-vercel.md) | Host the frontend on Vercel | Accepted |
+| [011](011-themes-as-css-variable-sets.md) | Themes are sets of CSS variables | Accepted |
