@@ -1548,32 +1548,21 @@ input[type='search']::-webkit-search-cancel-button {
   background: var(--picker-bg);
   color: var(--picker-text);
   box-shadow: 0 6px 16px var(--cover-shadow);
-  animation: quick-open 0.16s ease;
+}
+
+.quick-picker[hidden] {
+  display: none;
 }
 
 /* While the picker is open, the cover under it is hidden, so none of its colour or shadow shows
    around the picker's edge. */
-.title-card:has(.quick-picker) .cover {
-  animation: quick-hide 0s 0.16s forwards; /* only once the picker has finished fading in */
-}
-
-@keyframes quick-hide {
-  to {
-    visibility: hidden;
-  }
+.title-card:has(.quick-picker:not([hidden])) .cover {
+  visibility: hidden;
 }
 
 /* The + button stays in the page (so focus can return to it), but isn't seen or lit up behind the picker. */
-.quick-add:has(.quick-picker) .quick-add-button {
+.quick-add:has(.quick-picker:not([hidden])) .quick-add-button {
   opacity: 0;
-}
-
-/* A plain fade. It must not change the picker's size: a grow from 96% made the card look as if it
-   shrank for a moment when the cover disappeared. */
-@keyframes quick-open {
-  from {
-    opacity: 0;
-  }
 }
 
 .quick-picker p {
@@ -1748,7 +1737,6 @@ input[type='search']::-webkit-search-cancel-button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .quick-picker,
   .toast {
     animation: none;
   }
