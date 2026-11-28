@@ -135,6 +135,7 @@ a **production** instance requires a domain you own. A development instance is f
 | Same, right after a deploy that changed the database | The migration didn't run against the live database | Render → **Events**: did the deploy succeed? Is the Start Command correct (above)? From `backend`, run `alembic current` with the Neon string: it should show the newest revision, not an older one. |
 | The migration "succeeded" but the live data is still missing or the app still fails | Render's `DATABASE_URL` points at a different (older) database than the one you migrated | Compare Render's `DATABASE_URL` with the Neon dashboard's current connection string. |
 | "Can't reach WagaShelf" only on a Vercel preview | The preview address isn't in `FRONTEND_ORIGINS` | Expected: see "Preview deployments" above. |
+| Sign-in finishes (Clerk's logs show it) but the page keeps loading or looks signed out until a reload | Clerk waiting for a page load that never comes, because of the `#/` URLs. Fixed in #97 by giving Clerk the router; if it returns, check that `AuthProvider` still gets `navigate` in `Root.jsx`. | Reproduce with an iPhone profile in Playwright WebKit: sign in starting from `#/shelves` (the Home page hides it, because its redirect does reload). |
 | Slow first load, then it works | The free tier woke up from sleep | Wait about a minute. |
 
 To tell a CORS problem from a crash, open the browser's **Network** tab, click the failed request,

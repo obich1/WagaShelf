@@ -22,7 +22,7 @@ export default function Root() {
   return (
     <StrictMode>
       <ThemeProvider>
-        <AuthProvider>
+        <AuthProvider navigate={(path, options) => router.navigate(path, options)}>
           <LibraryProvider>
             <ToastProvider>
               <RouterProvider router={router} />
