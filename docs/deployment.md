@@ -76,6 +76,8 @@ by Git:
   dashboard, so it does not change when Neon's string changes (for example after resetting the
   password or switching branch). Migrations can't fix it: they run against whatever database the
   variable points to, so a stale value migrates the *old* database and leaves the live one behind.
+  Never point it at a Neon *branch* you made for an experiment: branches can expire, and the
+  users and entries written to one disappear with it. Production is the main branch.
 
 **One-time step when Alembic was introduced (ADR 012):** the Neon
 database already had its tables, so it must be told it is at the baseline version *before* the first
@@ -133,6 +135,8 @@ a **production** instance requires a domain you own. A development instance is f
 |---|---|---|
 | "Can't reach WagaShelf" on the live site, and the browser console shows a **CORS error** together with `500` | The API crashed on that request. A crashed (500) response carries no CORS headers, so the browser reports it as a network failure, not as a server error. | Render → **Logs** for the traceback. If it mentions a missing table or column, the database is behind: see the next rows. |
 | Same, right after a deploy that changed the database | The migration didn't run against the live database | Render → **Events**: did the deploy succeed? Is the Start Command correct (above)? From `backend`, run `alembic current` with the Neon string: it should show the newest revision, not an older one. |
+| Signed-in pages fail with the CORS-looking error, but `/health` and public pages work (for example `curl https://wagashelf-api.onrender.com/titles/anilist/21`) | The live database is behind: a migration (say, `users.username`) was never applied, usually because Render's Start Command lacks `alembic upgrade head` | Compare `SELECT * FROM alembic_version;` in Neon with the newest file in `backend/migrations/versions`. Fix the Start Command (above), then from `backend` run `alembic upgrade head` with the Neon string. |
+| Everything fails right after you created or used a Neon **branch** | Render's `DATABASE_URL` points at a branch, and branches can expire and be deleted (with their users and entries) | Render must point at the **main** branch only. Use branches for experiments and never paste their string into Render. Neon → Branches: does the branch in your `DATABASE_URL` still exist? |
 | The migration "succeeded" but the live data is still missing or the app still fails | Render's `DATABASE_URL` points at a different (older) database than the one you migrated | Compare Render's `DATABASE_URL` with the Neon dashboard's current connection string. |
 | "Can't reach WagaShelf" only on a Vercel preview | The preview address isn't in `FRONTEND_ORIGINS` | Expected: see "Preview deployments" above. |
 | Sign-in finishes (Clerk's logs show it) but the page keeps loading or looks signed out until a reload | Clerk waiting for a page load that never comes, because of the `#/` URLs. Fixed in #97 by giving Clerk the router; if it returns, check that `AuthProvider` still gets `navigate` in `Root.jsx`. | Reproduce with an iPhone profile in Playwright WebKit: sign in starting from `#/shelves` (the Home page hides it, because its redirect does reload). |
