@@ -4,6 +4,7 @@
 import { ClerkProvider, SignInButton, UserButton, useAuth, useUser } from '@clerk/react'
 
 import { CLERK_PUBLISHABLE_KEY } from './config'
+import { inAppPath } from './lib/clerkRouting'
 import { useTheme } from './theme'
 
 export const signInEnabled = Boolean(CLERK_PUBLISHABLE_KEY)
@@ -39,11 +40,19 @@ const appearanceFor = (theme) => ({
 // leaves nothing to resolve, and working it out from the current page means it's right on any host.
 const homeUrl = new URL('./', window.location.href).href
 
-export function AuthProvider({ children }) {
+// `navigate(path, { replace })` moves around the app through its router. Clerk uses it, instead of
+// setting the browser's address, after signing in or out (see lib/clerkRouting.js for why, #97).
+export function AuthProvider({ children, navigate }) {
   const { theme } = useTheme()
   if (!signInEnabled) return children
   return (
-    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} appearance={appearanceFor(theme)} afterSignOutUrl={homeUrl}>
+    <ClerkProvider
+      publishableKey={CLERK_PUBLISHABLE_KEY}
+      appearance={appearanceFor(theme)}
+      afterSignOutUrl={homeUrl}
+      routerPush={(to) => navigate(inAppPath(to))}
+      routerReplace={(to) => navigate(inAppPath(to), { replace: true })}
+    >
       {children}
     </ClerkProvider>
   )
